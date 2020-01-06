@@ -11533,7 +11533,7 @@ function sheet_to_json(sheet, opts){
 			default:
 				if(val === undefined) continue;
 				hdr[C] = format_cell(val);
-				hdr[C] = 'DTDS'+C;
+				hdr[C] = C; // CHANGED bY mAYUR
 		}
 	}
 

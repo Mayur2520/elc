@@ -1,0 +1,186 @@
+<div class="wrapper">
+    <div ng-include="'./public/navbar.html'"></div>
+
+
+    <!-- The Modal -->
+    <div class="modal fade" id="myModalImportContacts">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Import Contacts</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 col-md-12 col-lg-12 col-xl-12">
+                            <div class="custom-file mb-3">
+                                <input type="file" class="custom-file-input" id="customFile" name="filename"
+                                    onchange="angular.element(this).scope().UploadFile(this.files)">
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="text-danger">{{errormsg}}</label>
+                        </div>
+                    </div>
+
+                    <div class="row border-top" ng-init="setSettingBehavior('default')">
+                        <div class="btn-group p-2">
+                            <button type="button" ng-click="setSettingBehavior('default')" class="btn btn-primary btn-sm">Default</button>
+                            <button type="button" ng-click="setSettingBehavior('custome')" class="btn btn-primary btn-sm d-none">Custome</button>
+                          </div>
+                    </div>
+
+                    <div class="row border-top" ng-if="settingBehavior == 'default'">
+
+                        <div class="col-md-12 col-12">
+                            <p>Default structur for import data from first sheet is:</p>
+                            <table class="table">
+                                <thead>
+                                    <th>Name (A)</th>
+                                    <th>Gender (B)</th>
+                                    <th>Mobile No. (C)</th>
+                                    <th>Alt. Mobile No. (D)</th>
+                                    <th>Email (E)</th>
+                                </thead>
+                            </table>
+                        </div>
+
+
+                    </div>
+                    <div class="row border-top" style="display: none;" ng-if="settingBehavior == 'custome'">
+                        <div class="col-12 col-md-12 col-lg-12"><strong><i class="fa fa-cog"
+                                    aria-hidden="true"></i>&nbsp;Setting</strong></div>
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <p>
+                                Select Excel column for respected field in application.
+                            </p>
+                        </div>
+
+                        <div class="col-12 text-center" ng-if="showspinner">
+                            <strong><i class="fa fa-spinner fa-pulse" aria-hidden="true"></i> Please wait..</strong>
+                        </div>
+                        <div class="col-12 col-md-12 col-lg-12" ng-show="sheetName.length > 0">
+                            <div class="col-12 col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    <label for="sheetname">Select Sheet:</label>
+                                    <select class="form-control" id="sheetname" ng-model="selectedSheet"
+                                        ng-options="obj for obj in sheetName"
+                                        ng-change="getdataFromSheet(selectedSheet)">
+                                        <option value="" selected disabled>--Select--</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-12 col-lg-12" ng-show="selectedSheet">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <tbody>
+                                            <tr ng-repeat="_data in CustomersFields">
+                                                <td><label>{{_data.title}}</label></td>
+                                                <td>
+                                                    <select class="form-control" ng-model="_data.excelField"
+                                                        ng-options="_obj as _obj.title for _obj in ExcelFields" ng-change="setColumnForField(_data)">
+                                                        <option value="" selected>--Select--</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                       
+
+
+                    </div>
+
+                </div>
+
+                 <!-- Modal footer -->
+                 <div class="modal-footer">
+                    <button type="button" class="btn btn-success" ng-click="ImportContactData()">Import</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid section">
+
+        <div class="row mb-1">
+            <div class="col-md-12 col-lg-12 col-12">
+                <h4>Contacts</h4>
+            </div>
+            <div class="col-md-12 col-lg-12 col-12 mt-2">
+                <div class="row">
+                    <div class="col-md-4 col-lg-4 col-sm-6 col-12">
+                        <button class="btn btn-info btn-sm" ng-click="AddNewContact()">Add Contact</button>
+                        <button class="btn btn-info btn-sm" data-toggle="modal"
+                            data-target="#myModalImportContacts">Import Contacts</button>
+                    </div>
+                    <div class="col-md-6 col-lg-4 col-sm-6 col-12 ml-auto">
+                        <input class="form-control btn-sm" ng-model="search.name" placeholder="Search" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-condensed">
+                    <thead class="text-center">
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Gender</th>
+                        <th>Mobile No.</th>
+                        <th>Alt. Mobile No.</th>
+                        <th>Email</th>
+                        <th></th>
+                    </thead>
+                    <tbody ng-init="getContactList()">
+                        <tr ng-repeat="data in contactsList track by $index" ng-include="getTemplate(data)">
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <script type="text/ng-template" id="display">
+            <td>{{$index +1}}</td>
+        <td>{{data.name}}</td>
+        <td>{{data.gender}}</td>
+        <td>{{data.mobile1}}</td>
+        <td>{{data.mobile2}}</td>
+        <td>{{data.email}}</td>
+        <td>
+            <button class="btn btn-warning btn-sm" ng-click="editContact(data)">Edit</button>
+            <button class="btn btn-danger btn-sm" ng-click="deleteContactDetails(data.id)">Delete</button>
+        </td>
+    </script>
+        <script type="text/ng-template" id="edit">
+            <td>{{$index +1}}</td>
+       <td><input class="form-control btn-sm" placeholder="Name" ng-model="data.name" autocomplete="off"/></td>
+       <td><select class="form-control btn-sm" ng-model="data.gender" ng-options="obj for obj in ['Male','Female','Other']">
+        <option value="" selected disabled>--Select--</option>
+    </select></td>
+    <td><input class="form-control btn-sm" ng-model="data.mobile1" placeholder="Mobile No." autocomplete="off"></td>
+    <td><input class="form-control btn-sm" ng-model="data.mobile2" placeholder="Alt. Mobile No." autocomplete="off"></td>
+    <td><input type="email" class="form-control btn-sm" ng-model="data.email" placeholder="Email" autocomplete="off"></td>
+        <td>
+            <button class="btn btn-success btn-sm" ng-click="saveContact($index)">Save</button>
+            <button class="btn btn-info btn-sm" ng-click="reset()">Cancel</button>
+        </td>
+    </script>
+
+
+
+
+    </div>
+</div>

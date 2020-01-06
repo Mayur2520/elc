@@ -46,6 +46,7 @@ angular.module('MyApp')
         return $resource('/api/getDashboardValues',
         {}, { 'save': { method: 'POST',isArray:false } });
       },
+     
       
     }
   }]);
