@@ -43,16 +43,16 @@
                                 <thead>
                                     <th>Name (A)</th>
                                     <th>Gender (B)</th>
+                                    <th>Email (E)</th>
                                     <th>Mobile No. (C)</th>
                                     <th>Alt. Mobile No. (D)</th>
-                                    <th>Email (E)</th>
                                 </thead>
                             </table>
                         </div>
 
 
                     </div>
-                    <div class="row border-top" style="display: none;" ng-if="settingBehavior == 'custome'">
+                    <div class="row border-top" ng-if="settingBehavior == 'custome'">
                         <div class="col-12 col-md-12 col-lg-12"><strong><i class="fa fa-cog"
                                     aria-hidden="true"></i>&nbsp;Setting</strong></div>
                         <div class="col-12 col-md-12 col-lg-12">
@@ -84,8 +84,9 @@
                                                 <td><label>{{_data.title}}</label></td>
                                                 <td>
                                                     <select class="form-control" ng-model="_data.excelField"
-                                                        ng-options="_obj as _obj.title for _obj in ExcelFields" ng-change="setColumnForField(_data)">
+                                                        ng-change="setColumnForField(_data)">
                                                         <option value="" selected>--Select--</option>
+                                                        <option  ng-repeat="_obj in ExcelFields" value="_obj.field" ng-disabled="_obj.disabled">{{_obj.title}}</option>
                                                     </select>
                                                 </td>
                                             </tr>
@@ -118,6 +119,7 @@
             <div class="col-md-12 col-lg-12 col-12">
                 <h4>Contacts</h4>
             </div>
+           
             <div class="col-md-12 col-lg-12 col-12 mt-2">
                 <div class="row">
                     <div class="col-md-4 col-lg-4 col-sm-6 col-12">
@@ -126,11 +128,35 @@
                             data-target="#myModalImportContacts">Import Contacts</button>
                     </div>
                     <div class="col-md-6 col-lg-4 col-sm-6 col-12 ml-auto">
-                        <input class="form-control btn-sm" ng-model="search.name" placeholder="Search" />
+                        <div class="row">
+                                <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <button class="btn btn-sm btn-secondary" ng-click="filter = {}"><i class="fa fa-times" aria-hidden="true"></i></button>       
+                                        </div>
+                                        <div class="input-group-prepend">
+                                                <select class="form-control btn-sm" ng-model="filter.field" ng-options="obj.field as obj.title for obj in CustomersFields">
+                                                    <option value="" selected disabled>--select--</option>
+                                                </select>
+                                            </div>
+                                    <input class="form-control btn-sm" ng-model="filter.searchinput" placeholder="Search">
+                                    <div class="input-group-append" style="cursor: pointer;" >
+                                      <button class="btn btn-sm btn-info" ng-click="FilterResult(filter)" ng-disabled="!filter.field && !filter.searchinput"> <i class="fa fa-filter" aria-hidden="true"></i> Filter</button>
+                                    </div>
+                                  </div>
+                        </div>
+                       
+
+
+                         
+                            
+                            
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        
+
+        
 
         <div class="row">
             <div class="table-responsive">

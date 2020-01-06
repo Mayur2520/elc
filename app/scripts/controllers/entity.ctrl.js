@@ -1,5 +1,5 @@
 angular.module('MyApp')
-    .controller('EntityController', ['$scope', '$http', '$route', '$location', '$window', '$timeout', 'Upload', 'Entity', function ($scope, $http, $route, $location, $window, $timeout, Upload, Entity) {
+    .controller('EntityController', ['$scope', '$http', '$route', '$location', '$window', '$timeout', 'Upload', 'Entity', '$filter', function ($scope, $http, $route, $location, $window, $timeout, Upload, Entity, $filter) {
 
 
         $scope.model = {
@@ -11,7 +11,7 @@ angular.module('MyApp')
                 if (!response.status)
                     $scope.contactsList = response.contactsList;
                 if (status) {
-                    $scope.editContact($scope.contactsList[$scope.contactsList.length - 1])
+                    $scope.editContact($scope.contactsList[0])
                 }
             });
         }
@@ -34,6 +34,8 @@ angular.module('MyApp')
         $scope.editContact = function (contact) {
             $scope.model.selected = angular.copy(contact);
         };
+
+        
 
         $scope.saveContact = function (idx) {
 
@@ -140,6 +142,49 @@ angular.module('MyApp')
             },
         ]
 
+
+        $scope.nearestContcatFields = [{
+            field: 'name',
+            title: "Name"
+        },
+        {
+            field: 'gender',
+            title: "Gender"
+        },
+        {
+            field: 'mobile1',
+            title: "Mobile No."
+        },
+        {
+            field: 'mobile2',
+            title: "Alt. Mobile No."
+        },
+        {
+            field: 'email',
+            title: "Email"
+        },
+        {
+            field: 'dob',
+            title: "Date of Birth"
+        },
+        {
+            field: 'listno',
+            title: "List No."
+        },
+        {
+            field: 'indexno',
+            title: "SR. No."
+        },
+        {
+            field: 'rctno',
+            title: "RCT.No."
+        },
+        {
+            field: 'address',
+            title: "Address"
+        },
+    ]
+
         var alphabetsCars = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
         $scope.getdataFromSheet = function (sheetName) {
@@ -181,7 +226,17 @@ angular.module('MyApp')
         }
 
         $scope.setColumnForField = function (fieldObj) {
-            console.log(fieldObj)
+            
+           
+            $scope.CustomersFields.map(function(custvalue){
+
+                var recordExist = $filter('filter')($scope.ExcelFields,custvalue.excelField)
+                console.log(recordExist)
+                if(recordExist.length > 0)
+                recordExist[0].disabled = true;
+                });
+
+                console.log($scope.ExcelFields)
         }
 
         $scope.resetSelection = function()
@@ -255,5 +310,105 @@ angular.module('MyApp')
 
 
         }
+
+        $scope.FilterResult = function(filter)
+        {
+            if((filter.field == undefined || filter.field == "") && (filter.searchinput == undefined || filter.searchinput == ""))
+            {
+
+            }
+            else
+            {
+            Entity.FilterResult().save(filter).$promise.then(function (response) {
+                if (!response.status)
+                $scope.contactsList = response.contactsList;
+            });
+        }
+        }
+
+
+
+        // NEAREST CONTACTS
+
+
+        $scope.getVoterContactList = function (status) {
+            Entity.getVoterContactList().query({}).$promise.then(function (response) {
+                if (!response.status)
+                    $scope.voterContactsList = response.voterContactsList;
+                if (status) {
+                    $scope.editContact($scope.voterContactsList[0])
+                }
+            });
+        }
+
+        $scope.FilterNearestResult = function(filter)
+        {
+            if((filter.field == undefined || filter.field == "") && (filter.searchinput == undefined || filter.searchinput == ""))
+            {
+
+            }
+            else
+            {
+            Entity.FilterNearestResult().save(filter).$promise.then(function (response) {
+                if (!response.status)
+                $scope.voterContactsList = response.voterContactsList;
+            });
+        }
+        }
+
+
+        $scope.AddNewVoterContact = function () {
+            Entity.AddNewVoterContact().query({}).$promise.then(function (response) {
+                if (response.status == 0)
+                    $scope.getVoterContactList('newEntry');
+            });
+        }
+
+$scope.saveVoterContact = function (idx) {
+
+            Entity.saveVoterContact().save($scope.voterContactsList[idx]).$promise.then(function (response) {
+                Swal({
+                    type: response.type,
+                    title: response.title,
+                    text: response.message,
+                }).then(function () {
+                    if (response.status == 0) {
+                        $scope.reset();
+                        $scope.getVoterContactList();
+                    }
+                })
+            });
+
+        };
+$scope.deleteVoterContactDetails = function (id) {
+
+            Swal({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then(function (result) {
+                if (result.value) {
+                    Entity.deleteVoterContactDetails().query({
+                        id: id
+                    }).$promise.then(function (response) {
+                        Swal({
+                            type: response.type,
+                            title: response.title,
+                            text: response.message,
+                        }).then(function () {
+                            $scope.getVoterContactList();
+                        })
+                    });
+                }
+            });
+        };
+
+        $scope.editVoterContact = function (contact) {
+            $scope.model.selected = angular.copy(contact);
+        };
 
     }]);

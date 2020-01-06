@@ -35,5 +35,52 @@ angular.module('MyApp')
           return $resource('/api/ImportContactDetailsCustomeSetting',
           {}, { 'save': { method: 'POST',isArray:false } });
         },
+
+        FilterResult: function()
+        {
+          return $resource('/api/FilterResult',
+          {}, { 'save': { method: 'POST',isArray:false } });
+        },
+
+        // NEAREST CONTACTS
+
+        getVoterContactList: function()
+        {
+            return $resource('/api/getVoterContactList/',
+                {}, { 'query': { method: 'GET',isArray:false } });
+        },
+        AddNewVoterContact: function()
+        {
+            return $resource('/api/AddNewVoterContact/',
+                {}, { 'query': { method: 'GET',isArray:false } });
+        },
+        deleteVoterContactDetails: function()
+        {
+            return $resource('/api/deleteVoterContactDetails/:id',
+                {}, { 'query': { method: 'GET',isArray:false } });
+        },
+        saveVoterContact: function()
+        {
+          return $resource('/api/saveVoterContact',
+          {}, { 'save': { method: 'POST',isArray:false } });
+        },
+
+        ImportVoterContactDetails: function()
+        {
+          return $resource('/api/ImportVoterContactDetails',
+          {}, { 'save': { method: 'POST',isArray:false } });
+        },
+
+        ImportVoterContactDetailsCustomeSetting: function()
+        {
+          return $resource('/api/ImportVoterContactDetailsCustomeSetting',
+          {}, { 'save': { method: 'POST',isArray:false } });
+        },
+
+        FilterNearestResult: function()
+        {
+          return $resource('/api/FilterNearestResult',
+          {}, { 'save': { method: 'POST',isArray:false } });
+        },
     }
   }]);
