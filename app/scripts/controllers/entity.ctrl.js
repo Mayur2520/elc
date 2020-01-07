@@ -2,9 +2,18 @@ angular.module('MyApp')
     .controller('EntityController', ['$scope', '$http', '$route', '$location', '$window', '$timeout', 'Upload', 'Entity', '$filter', function ($scope, $http, $route, $location, $window, $timeout, Upload, Entity, $filter) {
 
 
+        $scope.dateOptionsFilters = {
+            changeYear: true,
+            changeMonth: true,
+            yearRange: '1971:-0',
+        };
+
+
         $scope.model = {
             selected: {}
         };
+
+
 
         $scope.getContactList = function (status) {
             Entity.getContactList().query({}).$promise.then(function (response) {
@@ -13,8 +22,24 @@ angular.module('MyApp')
                 if (status) {
                     $scope.editContact($scope.contactsList[0])
                 }
+
+                Entity.getRecordCountContacts().query({}).$promise.then(function (response) {
+                    console.log(response)
+
+                            $scope.totlaCount = response.TotalContcats;
+                            $scope.setPage(1)
+                });
             });
         }
+
+
+
+        
+        $scope.setPage = function(page) {
+            // get pager object from service
+            $scope.pager = GetPager($scope.totlaCount,page,50);
+            console.log($scope.pager)
+       }
 
 
 
@@ -35,7 +60,7 @@ angular.module('MyApp')
             $scope.model.selected = angular.copy(contact);
         };
 
-        
+
 
         $scope.saveContact = function (idx) {
 
@@ -144,46 +169,46 @@ angular.module('MyApp')
 
 
         $scope.nearestContcatFields = [{
-            field: 'name',
-            title: "Name"
-        },
-        {
-            field: 'gender',
-            title: "Gender"
-        },
-        {
-            field: 'mobile1',
-            title: "Mobile No."
-        },
-        {
-            field: 'mobile2',
-            title: "Alt. Mobile No."
-        },
-        {
-            field: 'email',
-            title: "Email"
-        },
-        {
-            field: 'dob',
-            title: "Date of Birth"
-        },
-        {
-            field: 'listno',
-            title: "List No."
-        },
-        {
-            field: 'indexno',
-            title: "SR. No."
-        },
-        {
-            field: 'rctno',
-            title: "RCT.No."
-        },
-        {
-            field: 'address',
-            title: "Address"
-        },
-    ]
+                field: 'listno',
+                title: "List No."
+            },
+            {
+                field: 'indexno',
+                title: "SR. No."
+            },
+            {
+                field: 'rctno',
+                title: "RCT.No."
+            },
+            {
+                field: 'name',
+                title: "Name"
+            },
+            {
+                field: 'gender',
+                title: "Gender"
+            },
+            {
+                field: 'email',
+                title: "Email"
+            },
+            {
+                field: 'mobile1',
+                title: "Mobile No."
+            },
+            {
+                field: 'mobile2',
+                title: "Alt. Mobile No."
+            },
+            {
+                field: 'dob',
+                title: "Date of Birth"
+            },
+            {
+                field: 'address',
+                title: "Address"
+            },
+        ]
 
         var alphabetsCars = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
@@ -226,21 +251,20 @@ angular.module('MyApp')
         }
 
         $scope.setColumnForField = function (fieldObj) {
-            
-           
-            $scope.CustomersFields.map(function(custvalue){
 
-                var recordExist = $filter('filter')($scope.ExcelFields,custvalue.excelField)
+
+            $scope.CustomersFields.map(function (custvalue) {
+
+                var recordExist = $filter('filter')($scope.ExcelFields, custvalue.excelField)
                 console.log(recordExist)
-                if(recordExist.length > 0)
-                recordExist[0].disabled = true;
-                });
+                if (recordExist.length > 0)
+                    recordExist[0].disabled = true;
+            });
 
-                console.log($scope.ExcelFields)
+            console.log($scope.ExcelFields)
         }
 
-        $scope.resetSelection = function()
-        {
+        $scope.resetSelection = function () {
             angular.element("input[type='file']").val(null);
             $(".custom-file-input").siblings(".custom-file-label").removeClass("selected").html("Choose file");
         }
@@ -263,7 +287,10 @@ angular.module('MyApp')
                     });
                 });
             } else {
-                Entity.ImportContactDetailsCustomeSetting().save({excelDate:excelData, setting:$scope.CustomersFields}).$promise.then(function (response) {
+                Entity.ImportContactDetailsCustomeSetting().save({
+                    excelDate: excelData,
+                    setting: $scope.CustomersFields
+                }).$promise.then(function (response) {
                     Swal({
                         type: response.type,
                         title: response.title,
@@ -311,19 +338,15 @@ angular.module('MyApp')
 
         }
 
-        $scope.FilterResult = function(filter)
-        {
-            if((filter.field == undefined || filter.field == "") && (filter.searchinput == undefined || filter.searchinput == ""))
-            {
+        $scope.FilterResult = function (filter) {
+            if ((filter.field == undefined || filter.field == "") && (filter.searchinput == undefined || filter.searchinput == "")) {
 
+            } else {
+                Entity.FilterResult().save(filter).$promise.then(function (response) {
+                    if (!response.status)
+                        $scope.contactsList = response.contactsList;
+                });
             }
-            else
-            {
-            Entity.FilterResult().save(filter).$promise.then(function (response) {
-                if (!response.status)
-                $scope.contactsList = response.contactsList;
-            });
-        }
         }
 
 
@@ -341,19 +364,15 @@ angular.module('MyApp')
             });
         }
 
-        $scope.FilterNearestResult = function(filter)
-        {
-            if((filter.field == undefined || filter.field == "") && (filter.searchinput == undefined || filter.searchinput == ""))
-            {
+        $scope.FilterNearestResult = function (filter) {
+            if ((filter.field == undefined || filter.field == "") && (filter.searchinput == undefined || filter.searchinput == "")) {
 
+            } else {
+                Entity.FilterNearestResult().save(filter).$promise.then(function (response) {
+                    if (!response.status)
+                        $scope.voterContactsList = response.voterContactsList;
+                });
             }
-            else
-            {
-            Entity.FilterNearestResult().save(filter).$promise.then(function (response) {
-                if (!response.status)
-                $scope.voterContactsList = response.voterContactsList;
-            });
-        }
         }
 
 
@@ -364,7 +383,7 @@ angular.module('MyApp')
             });
         }
 
-$scope.saveVoterContact = function (idx) {
+        $scope.saveVoterContact = function (idx) {
 
             Entity.saveVoterContact().save($scope.voterContactsList[idx]).$promise.then(function (response) {
                 Swal({
@@ -380,7 +399,7 @@ $scope.saveVoterContact = function (idx) {
             });
 
         };
-$scope.deleteVoterContactDetails = function (id) {
+        $scope.deleteVoterContactDetails = function (id) {
 
             Swal({
                 title: 'Are you sure?',
@@ -410,5 +429,59 @@ $scope.deleteVoterContactDetails = function (id) {
         $scope.editVoterContact = function (contact) {
             $scope.model.selected = angular.copy(contact);
         };
+
+
+
+        // service implementation
+        function GetPager(totalItems, currentPage, pageSize) {
+            // default to first page
+            currentPage = currentPage || 1;
+
+            // default page size is 10
+            pageSize = pageSize || 10;
+
+            // calculate total pages
+            var totalPages = Math.ceil(totalItems / pageSize);
+
+            var startPage, endPage;
+            if (totalPages <= 10) {
+                // less than 10 total pages so show all
+                startPage = 1;
+                endPage = totalPages;
+            } else {
+                // more than 10 total pages so calculate start and end pages
+                if (currentPage <= 6) {
+                    startPage = 1;
+                    endPage = 10;
+                } else if (currentPage + 4 >= totalPages) {
+                    startPage = totalPages - 9;
+                    endPage = totalPages;
+                } else {
+                    startPage = currentPage - 5;
+                    endPage = currentPage + 4;
+                }
+            }
+
+            // calculate start and end item indexes
+            var startIndex = (currentPage - 1) * pageSize;
+            var endIndex = Math.min(startIndex + pageSize - 1, totalItems - 1);
+
+            // create an array of pages to ng-repeat in the pager control
+            //var pages = totalItems(startPage, endPage + 1);
+
+            // return object with all pager properties required by the view
+            return {
+                totalItems: totalItems,
+                currentPage: currentPage,
+                pageSize: pageSize,
+                totalPages: totalPages,
+                startPage: startPage,
+                endPage: endPage,
+                startIndex: startIndex,
+                endIndex: endIndex,
+                // pages: pages
+            };
+        }
+      
 
     }]);

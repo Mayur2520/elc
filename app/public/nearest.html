@@ -39,15 +39,22 @@
 
                         <div class="col-md-12 col-12">
                             <p>Default structur for import data from first sheet is:</p>
+                            <div class="table-responsive">
                             <table class="table">
                                 <thead>
-                                    <th>Name (A)</th>
-                                    <th>Gender (B)</th>
-                                    <th>Email (E)</th>
-                                    <th>Mobile No. (C)</th>
-                                    <th>Alt. Mobile No. (D)</th>
+                                    <th>List No. (A)</th>
+                                    <th>SR. No. (B)</th>
+                                    <th>RCT.No. (C)</th>
+                                    <th>Name (D)</th>
+                                    <th>Gender (E)</th>
+                                    <th>Email (F)</th>
+                                    <th>Mobile No. (G)</th>
+                                    <th>Alt. Mobile No. (H)</th>
+                                    <th>Date of Birth (I)</th>
+                                    <th>Address (J)</th>
                                 </thead>
                             </table>
+                        </div>
                         </div>
 
 
@@ -80,7 +87,7 @@
                                 <div class="table-responsive">
                                     <table class="table table-striped">
                                         <tbody>
-                                            <tr ng-repeat="_data in CustomersFields">
+                                            <tr ng-repeat="_data in nearestContcatFields">
                                                 <td><label>{{_data.title}}</label></td>
                                                 <td>
                                                     <select class="form-control" ng-model="_data.excelField"
@@ -128,7 +135,7 @@
                             data-target="#myModalImportVoterContacts">Import Contacts</button>
                     </div>
                     <div class="col-md-6 col-lg-4 col-sm-6 col-12 ml-auto">
-                        <div class="row">
+                        <!-- <div class="row"> -->
                                 <div class="input-group">
                                         <div class="input-group-prepend">
                                             <button class="btn btn-sm btn-secondary" ng-click="filter = {}"><i class="fa fa-times" aria-hidden="true"></i></button>       
@@ -140,10 +147,10 @@
                                             </div>
                                     <input class="form-control btn-sm" ng-model="filter.searchinput" placeholder="Search">
                                     <div class="input-group-append" style="cursor: pointer;" >
-                                      <button class="btn btn-sm btn-info" ng-click="FilterResult(filter)" ng-disabled="!filter.field && !filter.searchinput"> <i class="fa fa-filter" aria-hidden="true"></i> Filter</button>
+                                      <button class="btn btn-sm btn-info" ng-click="FilterNearestResult(filter)" ng-disabled="!filter.field && !filter.searchinput"> <i class="fa fa-filter" aria-hidden="true"></i> Filter</button>
                                     </div>
                                   </div>
-                        </div>
+                        <!-- </div> -->
                        
 
 
@@ -151,6 +158,16 @@
                             
                             
                         </div>
+                    </div>
+
+                    <div class="col-md-12 col-12">
+                        <ul class="pagination">
+                            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                          </ul>
                     </div>
                 </div>
             </div>
@@ -183,6 +200,8 @@
             </div>
         </div>
 
+       
+
         <script type="text/ng-template" id="display">
             <td>{{$index +1}}</td>
         <td>{{data.listno}}</td>
@@ -212,7 +231,7 @@
     <td><input class="form-control btn-sm" ng-model="data.mobile1" placeholder="Mobile No." autocomplete="off"></td>
     <td><input class="form-control btn-sm" ng-model="data.mobile2" placeholder="Alt. Mobile No." autocomplete="off"></td>
     <td><input type="email" class="form-control btn-sm" ng-model="data.email" placeholder="Email" autocomplete="off"></td>
-    <td><input class="form-control btn-sm" ng-model="data.dob" placeholder="Date of Birth" autocomplete="off"></td>
+    <td><input class="form-control btn-sm" ui-date="dateOptionsFilters" ng-model="data.dob" placeholder="Date of Birth" autocomplete="off"></td>
     <td><textarea class="form-control btn-sm" ng-model="data.address" placeholder="Address" autocomplete="off"></textarea></td>
         <td>
             <button class="btn btn-success btn-sm" ng-click="saveVoterContact($index)">Save</button>
@@ -221,6 +240,30 @@
     </script>
 
 
+
+
+    <div class="row">
+        <div class="col-md-12 col-12">
+        <!-- pager -->
+        <ul class="pagination">
+            <li class="page-item" ng-class="{disabled:pager.currentPage === 1}">
+                <a class="page-link" ng-click="setPage(1)">First</a>
+            </li>
+            <li class="page-item" ng-class="{disabled:pager.currentPage === 1}">
+                <a class="page-link" ng-click="setPage(pager.currentPage - 1)">Previous</a>
+            </li>
+            <li class="page-item" ng-repeat="page in pager.pages" ng-class="{active:pager.currentPage === page}">
+                <a class="page-link" ng-click="setPage(page)">{{page}}</a>
+            </li>                
+            <li class="page-item" ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                <a class="page-link" ng-click="setPage(pager.currentPage + 1)">Next</a>
+            </liclass="page-item">
+            <li class="page-item" ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                <a class="page-link" ng-click="setPage(pager.totalPages)">Last</a>
+            </li>
+        </ul>
+        </div>
+    </div>
 
 
     </div>

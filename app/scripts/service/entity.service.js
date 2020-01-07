@@ -8,6 +8,12 @@ angular.module('MyApp')
             return $resource('/api/getContactList/',
                 {}, { 'query': { method: 'GET',isArray:false } });
         },
+
+        getRecordCountContacts: function()
+        {
+            return $resource('/api/getRecordCountContacts/',
+                {}, { 'query': { method: 'GET',isArray:false } });
+        },
         AddNewContact: function()
         {
             return $resource('/api/AddNewContact/',
