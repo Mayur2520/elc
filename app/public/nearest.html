@@ -160,20 +160,19 @@
                         </div>
                     </div>
 
-                    <div class="col-md-12 col-12">
-                        <ul class="pagination">
-                            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                          </ul>
-                    </div>
+                   
                 </div>
             </div>
         
 
+            <div class="row ml-auto mr-auto mb-1 mt-1">
+                <div class="col-md-12 col-12 text-center">
         
+                    <ul uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" items-per-page="50" max-size="maxSize" ng-click="getVoterContactListPagination(bigCurrentPage)" class="pagination-sm" boundary-links="true" force-ellipses="true"></ul>
+        
+                
+                </div>
+            </div>
 
         <div class="row">
             <div class="table-responsive">
@@ -242,28 +241,6 @@
 
 
 
-    <div class="row">
-        <div class="col-md-12 col-12">
-        <!-- pager -->
-        <ul class="pagination">
-            <li class="page-item" ng-class="{disabled:pager.currentPage === 1}">
-                <a class="page-link" ng-click="setPage(1)">First</a>
-            </li>
-            <li class="page-item" ng-class="{disabled:pager.currentPage === 1}">
-                <a class="page-link" ng-click="setPage(pager.currentPage - 1)">Previous</a>
-            </li>
-            <li class="page-item" ng-repeat="page in pager.pages" ng-class="{active:pager.currentPage === page}">
-                <a class="page-link" ng-click="setPage(page)">{{page}}</a>
-            </li>                
-            <li class="page-item" ng-class="{disabled:pager.currentPage === pager.totalPages}">
-                <a class="page-link" ng-click="setPage(pager.currentPage + 1)">Next</a>
-            </liclass="page-item">
-            <li class="page-item" ng-class="{disabled:pager.currentPage === pager.totalPages}">
-                <a class="page-link" ng-click="setPage(pager.totalPages)">Last</a>
-            </li>
-        </ul>
-        </div>
-    </div>
 
 
     </div>

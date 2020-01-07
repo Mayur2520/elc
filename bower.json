@@ -25,6 +25,8 @@
     "angular-resource": "^1.7.9",
     "angular-cookies": "^1.7.9",
     "sweetalert": "^2.1.2",
-    "angular-ui-date": "^1.0.1"
+    "angular-ui-date": "^1.0.1",
+    "install": "^1.0.4",
+    "angular-ui-bootstrap": "^2.5.6"
   }
 }

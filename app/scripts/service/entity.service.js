@@ -8,6 +8,11 @@ angular.module('MyApp')
             return $resource('/api/getContactList/',
                 {}, { 'query': { method: 'GET',isArray:false } });
         },
+        getContactListPagination: function()
+        {
+            return $resource('/api/getContactListPagination/:skip',
+                {}, { 'query': { method: 'GET',isArray:false } });
+        },
 
         getRecordCountContacts: function()
         {
@@ -87,6 +92,18 @@ angular.module('MyApp')
         {
           return $resource('/api/FilterNearestResult',
           {}, { 'save': { method: 'POST',isArray:false } });
+        },
+        
+        getVoterContactListPagination: function()
+        {
+            return $resource('/api/getVoterContactListPagination/:skip',
+                {}, { 'query': { method: 'GET',isArray:false } });
+        },
+
+        getRecordCountVoterContacts: function()
+        {
+            return $resource('/api/getRecordCountVoterContacts/',
+                {}, { 'query': { method: 'GET',isArray:false } });
         },
     }
   }]);

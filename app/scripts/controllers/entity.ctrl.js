@@ -24,24 +24,13 @@ angular.module('MyApp')
                 }
 
                 Entity.getRecordCountContacts().query({}).$promise.then(function (response) {
-                    console.log(response)
-
                             $scope.totlaCount = response.TotalContcats;
-                            $scope.setPage(1)
+                            $scope.maxSize = 10;
+                            $scope.bigTotalItems = $scope.totlaCount;
+                            $scope.bigCurrentPage = 1;
                 });
             });
         }
-
-
-
-        
-        $scope.setPage = function(page) {
-            // get pager object from service
-            $scope.pager = GetPager($scope.totlaCount,page,50);
-            console.log($scope.pager)
-       }
-
-
 
         $scope.AddNewContact = function () {
             Entity.AddNewContact().query({}).$promise.then(function (response) {
@@ -261,7 +250,7 @@ angular.module('MyApp')
                     recordExist[0].disabled = true;
             });
 
-            console.log($scope.ExcelFields)
+            
         }
 
         $scope.resetSelection = function () {
@@ -350,6 +339,15 @@ angular.module('MyApp')
         }
 
 
+        $scope.getContactListFromPagination = function(value)
+        {            
+            Entity.getContactListPagination().query({skip:value}).$promise.then(function (response) {
+                if (!response.status)
+                    $scope.contactsList = response.contactsList;
+            });
+            
+        }
+
 
         // NEAREST CONTACTS
 
@@ -362,6 +360,23 @@ angular.module('MyApp')
                     $scope.editContact($scope.voterContactsList[0])
                 }
             });
+
+            Entity.getRecordCountVoterContacts().query({}).$promise.then(function (response) {
+                $scope.totlaCount = response.TotalContcats;
+                $scope.maxSize = 10;
+                $scope.bigTotalItems = $scope.totlaCount;
+                $scope.bigCurrentPage = 1;
+    });
+        }
+
+
+         $scope.getVoterContactListPagination = function(value)
+        {            
+            Entity.getVoterContactListPagination().query({skip:value}).$promise.then(function (response) {
+                if (!response.status)
+                    $scope.voterContactsList = response.voterContactsList;
+            });
+            
         }
 
         $scope.FilterNearestResult = function (filter) {
@@ -429,59 +444,5 @@ angular.module('MyApp')
         $scope.editVoterContact = function (contact) {
             $scope.model.selected = angular.copy(contact);
         };
-
-
-
-        // service implementation
-        function GetPager(totalItems, currentPage, pageSize) {
-            // default to first page
-            currentPage = currentPage || 1;
-
-            // default page size is 10
-            pageSize = pageSize || 10;
-
-            // calculate total pages
-            var totalPages = Math.ceil(totalItems / pageSize);
-
-            var startPage, endPage;
-            if (totalPages <= 10) {
-                // less than 10 total pages so show all
-                startPage = 1;
-                endPage = totalPages;
-            } else {
-                // more than 10 total pages so calculate start and end pages
-                if (currentPage <= 6) {
-                    startPage = 1;
-                    endPage = 10;
-                } else if (currentPage + 4 >= totalPages) {
-                    startPage = totalPages - 9;
-                    endPage = totalPages;
-                } else {
-                    startPage = currentPage - 5;
-                    endPage = currentPage + 4;
-                }
-            }
-
-            // calculate start and end item indexes
-            var startIndex = (currentPage - 1) * pageSize;
-            var endIndex = Math.min(startIndex + pageSize - 1, totalItems - 1);
-
-            // create an array of pages to ng-repeat in the pager control
-            //var pages = totalItems(startPage, endPage + 1);
-
-            // return object with all pager properties required by the view
-            return {
-                totalItems: totalItems,
-                currentPage: currentPage,
-                pageSize: pageSize,
-                totalPages: totalPages,
-                startPage: startPage,
-                endPage: endPage,
-                startIndex: startIndex,
-                endIndex: endIndex,
-                // pages: pages
-            };
-        }
-      
 
     }]);
