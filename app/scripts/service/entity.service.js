@@ -10,15 +10,10 @@ angular.module('MyApp')
         },
         getContactListPagination: function()
         {
-            return $resource('/api/getContactListPagination/:skip',
-                {}, { 'query': { method: 'GET',isArray:false } });
+            return $resource('/api/getContactListPagination/',
+                {}, { 'save': { method: 'POST',isArray:false } });
         },
 
-        getRecordCountContacts: function()
-        {
-            return $resource('/api/getRecordCountContacts/',
-                {}, { 'query': { method: 'GET',isArray:false } });
-        },
         AddNewContact: function()
         {
             return $resource('/api/AddNewContact/',
@@ -96,14 +91,14 @@ angular.module('MyApp')
         
         getVoterContactListPagination: function()
         {
-            return $resource('/api/getVoterContactListPagination/:skip',
-                {}, { 'query': { method: 'GET',isArray:false } });
+            return $resource('/api/getVoterContactListPagination/',
+                {}, { 'save': { method: 'POST',isArray:false } });
         },
 
-        getRecordCountVoterContacts: function()
+        CopyContacttoNearest: function()
         {
-            return $resource('/api/getRecordCountVoterContacts/',
-                {}, { 'query': { method: 'GET',isArray:false } });
+            return $resource('/api/CopyContacttoNearest/',
+                {}, { 'save': { method: 'POST',isArray:false } });
         },
     }
   }]);

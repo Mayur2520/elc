@@ -192,9 +192,10 @@
         <td>{{data.mobile1}}</td>
         <td>{{data.mobile2}}</td>
         <td>{{data.email}}</td>
-        <td>
+        <td class="text-center">
             <button class="btn btn-warning btn-sm" ng-click="editContact(data)">Edit</button>
             <button class="btn btn-danger btn-sm" ng-click="deleteContactDetails(data.id)">Delete</button>
+            <button class="btn btn-secondary btn-sm" ng-click="CopyContacttoNearest(data)">Copy To Nearest</button>
         </td>
     </script>
         <script type="text/ng-template" id="edit">
@@ -206,7 +207,7 @@
     <td><input class="form-control btn-sm" ng-model="data.mobile1" placeholder="Mobile No." autocomplete="off"></td>
     <td><input class="form-control btn-sm" ng-model="data.mobile2" placeholder="Alt. Mobile No." autocomplete="off"></td>
     <td><input type="email" class="form-control btn-sm" ng-model="data.email" placeholder="Email" autocomplete="off"></td>
-        <td>
+        <td class="text-center">
             <button class="btn btn-success btn-sm" ng-click="saveContact($index)">Save</button>
             <button class="btn btn-info btn-sm" ng-click="reset()">Cancel</button>
         </td>
