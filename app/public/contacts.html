@@ -105,7 +105,10 @@
 
                  <!-- Modal footer -->
                  <div class="modal-footer">
-                    <button type="button" class="btn btn-success" ng-click="ImportContactData()">Import</button>
+                    <button type="button"  class="btn btn-success" ng-click="ImportContactData()" ng-disabled="startImport"><span ng-if="startImport"><i class="fa fa-spinner fa-pulse" aria-hidden="true"></i> Importing data Please wait..</span><span ng-if="!startImport">Import</span></button>
+
+                    
+
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -200,12 +203,12 @@
     </script>
         <script type="text/ng-template" id="edit">
             <td>{{$index +1}}</td>
-       <td><input class="form-control btn-sm" placeholder="Name" ng-model="data.name" autocomplete="off"/></td>
+       <td><input class="form-control btn-sm" placeholder="Name" ng-model="data.name" autocomplete="off" autofocus/></td>
        <td><select class="form-control btn-sm" ng-model="data.gender" ng-options="obj for obj in ['Male','Female','Other']">
         <option value="" selected disabled>--Select--</option>
     </select></td>
-    <td><input class="form-control btn-sm" ng-model="data.mobile1" placeholder="Mobile No." autocomplete="off"></td>
-    <td><input class="form-control btn-sm" ng-model="data.mobile2" placeholder="Alt. Mobile No." autocomplete="off"></td>
+    <td><input class="form-control btn-sm" ng-model="data.mobile1" maxlength="12" placeholder="Mobile No." autocomplete="off"></td>
+    <td><input class="form-control btn-sm" ng-model="data.mobile2" maxlength="12" placeholder="Alt. Mobile No." autocomplete="off"></td>
     <td><input type="email" class="form-control btn-sm" ng-model="data.email" placeholder="Email" autocomplete="off"></td>
         <td class="text-center">
             <button class="btn btn-success btn-sm" ng-click="saveContact($index)">Save</button>

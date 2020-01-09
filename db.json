@@ -8,7 +8,7 @@
     }
     ,
     {
-        "Query":"CREATE TABLE IF NOT EXISTS `voters` ( `id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(1000) NULL , `email` VARCHAR(1000) NULL , `mobile1` BIGINT NULL ,  `mobile2` BIGINT NULL, `dob` DATETIME NULL,`gender` VARCHAR(1000) NULL , `address` VARCHAR(5000) NULL,`listno` VARCHAR(500) NULL,`rctno` VARCHAR(500) NULL,`indexno` VARCHAR(500) NULL, `createddate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `createdby` INT NULL, PRIMARY KEY (`id`)) ENGINE = InnoDB;"
+        "Query":"CREATE TABLE IF NOT EXISTS `voters` ( `id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(1000) NULL , `email` VARCHAR(1000) NULL , `mobile1` BIGINT NULL ,  `mobile2` BIGINT NULL, `dob` DATETIME NULL,`gender` VARCHAR(1000) NULL , `address` VARCHAR(2000) NULL,`listno` VARCHAR(500) NULL,`rctno` VARCHAR(500) NULL,`indexno` VARCHAR(500) NULL, `createddate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `createdby` INT NULL, PRIMARY KEY (`id`)) ENGINE = InnoDB;"
     }
     ,
     {

@@ -30,7 +30,8 @@ angular.module('MyApp')
                 if (status) {
                     $scope.editContact($scope.contactsList[0])
                 }
-                paginationSetting($scope.contactsList[0].totalcontacts);
+                if($scope.contactsList.length > 0)
+                    paginationSetting($scope.contactsList[0].totalcontacts);
             });
         }
 
@@ -199,6 +200,10 @@ angular.module('MyApp')
                 field: 'address',
                 title: "Address"
             },
+            {
+                field: 'building',
+                title: "Building Name"
+            },
         ]
 
         var alphabetsCars = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
@@ -273,6 +278,7 @@ angular.module('MyApp')
                         } else {
                             $scope.resetSelection();
                             $('#myModalImportContacts').modal('hide');
+                            $scope.startImport  = false;
                             $scope.getContactList();
                         }
                     });
@@ -301,6 +307,7 @@ angular.module('MyApp')
 
         $scope.ImportContactData = function () {
 
+            $scope.startImport  = true;
 
             var file = $scope.SelectedFileForUpload;
             if (file) {

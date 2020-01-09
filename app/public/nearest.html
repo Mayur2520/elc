@@ -52,6 +52,7 @@
                                     <th>Alt. Mobile No. (H)</th>
                                     <th>Date of Birth (I)</th>
                                     <th>Address (J)</th>
+                                    <th>Building Name (K)</th>
                                 </thead>
                             </table>
                         </div>
@@ -124,7 +125,7 @@
 
         <div class="row mb-1">
             <div class="col-md-12 col-lg-12 col-12">
-                <h4>Nearest</h4>
+                <h4>Yadi</h4>
             </div>
            
             <div class="col-md-12 col-lg-12 col-12 mt-2">
@@ -189,6 +190,7 @@
                         <th>Email</th>
                         <th>Date of Birth</th>
                         <th>Address</th>
+                        <th>Building Name</th>
                         <th></th>
                     </thead>
                     <tbody ng-init="getVoterContactList()">
@@ -213,6 +215,7 @@
         <td>{{data.email}}</td>
         <td>{{data.dob | date:'dd/MM/yyyy'}}</td>
         <td>{{data.address}}</td>
+        <td>{{data.building}}</td>
         <td>
             <button class="btn btn-warning btn-sm" ng-click="editVoterContact(data)">Edit</button>
             <button class="btn btn-danger btn-sm" ng-click="deleteVoterContactDetails(data.id)">Delete</button>
@@ -220,18 +223,19 @@
     </script>
         <script type="text/ng-template" id="edit">
             <td>{{$index +1}}</td>
-       <td><input class="form-control btn-sm" placeholder="List No." ng-model="data.listno" autocomplete="off"/></td>
+       <td><input class="form-control btn-sm" placeholder="List No." ng-model="data.listno" autocomplete="off" autofocus/></td>
        <td><input class="form-control btn-sm" placeholder="Sr. No." ng-model="data.indexno" autocomplete="off"/></td>
        <td><input class="form-control btn-sm" placeholder="RCT.No." ng-model="data.rctno" autocomplete="off"/></td>
        <td><input class="form-control btn-sm" placeholder="Name" ng-model="data.name" autocomplete="off"/></td>
        <td><select class="form-control btn-sm" ng-model="data.gender" ng-options="obj for obj in ['Male','Female','Other']">
         <option value="" selected disabled>--Select--</option>
     </select></td>
-    <td><input class="form-control btn-sm" ng-model="data.mobile1" placeholder="Mobile No." autocomplete="off"></td>
-    <td><input class="form-control btn-sm" ng-model="data.mobile2" placeholder="Alt. Mobile No." autocomplete="off"></td>
+    <td><input class="form-control btn-sm" ng-model="data.mobile1" maxlength="12" placeholder="Mobile No." autocomplete="off"></td>
+    <td><input class="form-control btn-sm" ng-model="data.mobile2" maxlength="12" placeholder="Alt. Mobile No." autocomplete="off"></td>
     <td><input type="email" class="form-control btn-sm" ng-model="data.email" placeholder="Email" autocomplete="off"></td>
     <td><input class="form-control btn-sm" ui-date="dateOptionsFilters" ng-model="data.dob" placeholder="Date of Birth" autocomplete="off"></td>
     <td><textarea class="form-control btn-sm" ng-model="data.address" placeholder="Address" autocomplete="off"></textarea></td>
+    <td><input class="form-control" ng-model="data.building" placeholder="Building Name"/></td>
         <td>
             <button class="btn btn-success btn-sm" ng-click="saveVoterContact($index)">Save</button>
             <button class="btn btn-info btn-sm" ng-click="reset()">Cancel</button>
