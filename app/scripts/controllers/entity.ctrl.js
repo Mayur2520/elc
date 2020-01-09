@@ -13,7 +13,15 @@ angular.module('MyApp')
             selected: {}
         };
 
-
+        function paginationSetting(totalRecord)
+        {
+            if(totalRecord < 50)
+            totalRecord = totalRecord + 50;
+            $scope.totlaCount = totalRecord;
+            $scope.maxSize = 10;
+            $scope.bigTotalItems = $scope.totlaCount;
+            $scope.bigCurrentPage = 1;
+        }
 
         $scope.getContactList = function (status) {
             Entity.getContactList().query({}).$promise.then(function (response) {
@@ -22,13 +30,7 @@ angular.module('MyApp')
                 if (status) {
                     $scope.editContact($scope.contactsList[0])
                 }
-
-                Entity.getRecordCountContacts().query({}).$promise.then(function (response) {
-                            $scope.totlaCount = response.TotalContcats;
-                            $scope.maxSize = 10;
-                            $scope.bigTotalItems = $scope.totlaCount;
-                            $scope.bigCurrentPage = 1;
-                });
+                paginationSetting($scope.contactsList[0].totalcontacts);
             });
         }
 
@@ -334,18 +336,39 @@ angular.module('MyApp')
                 Entity.FilterResult().save(filter).$promise.then(function (response) {
                     if (!response.status)
                         $scope.contactsList = response.contactsList;
+                        paginationSetting($scope.contactsList[0].totalcontacts);
                 });
             }
         }
 
 
         $scope.getContactListFromPagination = function(value)
-        {            
-            Entity.getContactListPagination().query({skip:value}).$promise.then(function (response) {
+        {   
+            if($scope.filter)         
+            {
+                if (($scope.filter.field == undefined || $scope.filter.field == "") && ($scope.filter.searchinput == undefined || $scope.filter.searchinput == "")) {
+                    var query = {skip:value}
+                }
+                else
+                {
+                    var query = {skip:value, filter:$scope.filter}
+                }
+            }
+            else
+            {
+                var query = {skip:value}
+            }
+
+
+            if(value == ($scope.totlaCount/50))
+            {
+                query.islast = true;
+            }
+
+            Entity.getContactListPagination().save(query).$promise.then(function (response) {
                 if (!response.status)
                     $scope.contactsList = response.contactsList;
             });
-            
         }
 
 
@@ -359,24 +382,41 @@ angular.module('MyApp')
                 if (status) {
                     $scope.editContact($scope.voterContactsList[0])
                 }
-            });
 
-            Entity.getRecordCountVoterContacts().query({}).$promise.then(function (response) {
-                $scope.totlaCount = response.TotalContcats;
-                $scope.maxSize = 10;
-                $scope.bigTotalItems = $scope.totlaCount;
-                $scope.bigCurrentPage = 1;
-    });
+                paginationSetting($scope.voterContactsList[0].totalcontacts);
+
+            });
         }
 
 
          $scope.getVoterContactListPagination = function(value)
         {            
-            Entity.getVoterContactListPagination().query({skip:value}).$promise.then(function (response) {
+
+            if($scope.filter)         
+            {
+                if (($scope.filter.field == undefined || $scope.filter.field == "") && ($scope.filter.searchinput == undefined || $scope.filter.searchinput == "")) {
+                    var query = {skip:value}
+                }
+                else
+                {
+                    var query = {skip:value, filter:$scope.filter}
+                }
+            }
+            else
+            {
+                var query = {skip:value}
+            }
+
+
+            if(value == ($scope.totlaCount/50))
+            {
+                query.islast = true;
+            }
+
+            Entity.getVoterContactListPagination().save(query).$promise.then(function (response) {
                 if (!response.status)
-                    $scope.voterContactsList = response.voterContactsList;
-            });
-            
+                $scope.voterContactsList = response.voterContactsList;
+            });            
         }
 
         $scope.FilterNearestResult = function (filter) {
@@ -386,6 +426,7 @@ angular.module('MyApp')
                 Entity.FilterNearestResult().save(filter).$promise.then(function (response) {
                     if (!response.status)
                         $scope.voterContactsList = response.voterContactsList;
+                        paginationSetting($scope.voterContactsList[0].totalcontacts);
                 });
             }
         }
@@ -397,6 +438,23 @@ angular.module('MyApp')
                     $scope.getVoterContactList('newEntry');
             });
         }
+
+        $scope.CopyContacttoNearest = function (contactData) {
+            Entity.CopyContacttoNearest().save(contactData).$promise.then(function (response) {
+                Swal({
+                    type: response.type,
+                    title: response.title,
+                    text: response.message,
+                }).then(function () {
+                    if (response.status == 0) {
+                        // $scope.reset();
+                        // $scope.getVoterContactList();
+                    }
+                })
+            });
+
+        };
+
 
         $scope.saveVoterContact = function (idx) {
 
