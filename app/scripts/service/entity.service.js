@@ -100,5 +100,28 @@ angular.module('MyApp')
             return $resource('/api/CopyContacttoNearest/',
                 {}, { 'save': { method: 'POST',isArray:false } });
         },
+
+        CreateFamily: function()
+        {
+            return $resource('/api/CreateFamily/',
+                {}, { 'save': { method: 'POST',isArray:false } });
+        },
+        ShowFamilyDetails: function()
+        {
+            return $resource('/api/ShowFamilyDetails/:familyid',
+                {}, { 'query': { method: 'GET',isArray:false } });
+        },
+
+        SaveListDetails: function()
+        {
+            return $resource('/api/SaveListDetails/',
+                {}, { 'save': { method: 'POST',isArray:false } });
+        },
+
+        getListRecord: function()
+        {
+            return $resource('/api/getListRecord/',
+                {}, { 'query': { method: 'GET',isArray:false } });
+        },
     }
   }]);

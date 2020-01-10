@@ -1,5 +1,5 @@
 angular.module('MyApp')
-    .controller('EntityController', ['$scope', '$http', '$route', '$location', '$window', '$timeout', 'Upload', 'Entity', '$filter', function ($scope, $http, $route, $location, $window, $timeout, Upload, Entity, $filter) {
+    .controller('EntityController', ['$scope', '$rootScope', '$http', '$route', '$location', '$window', '$timeout', 'Upload', 'Entity', 'Authenticate', '$filter', function ($scope, $rootScope, $http, $route, $location, $window, $timeout, Upload, Entity, Authenticate, $filter) {
 
 
         $scope.dateOptionsFilters = {
@@ -22,6 +22,15 @@ angular.module('MyApp')
             $scope.bigTotalItems = $scope.totlaCount;
             $scope.bigCurrentPage = 1;
         }
+
+
+        $scope.getUserList = function()
+        {
+            Authenticate.getUserList().query().$promise.then(function (response) {
+                     if(!response.status)
+                        $scope.UsersList = response.UsersList;
+                });      
+        };
 
         $scope.getContactList = function (status) {
             Entity.getContactList().query({}).$promise.then(function (response) {
@@ -100,6 +109,7 @@ angular.module('MyApp')
 
 
         $scope.reset = function () {
+            $scope.isEdit = false;
             $scope.model.selected = {};
         };
 
@@ -343,6 +353,7 @@ angular.module('MyApp')
                 Entity.FilterResult().save(filter).$promise.then(function (response) {
                     if (!response.status)
                         $scope.contactsList = response.contactsList;
+                        if($scope.contactsList.length > 0)
                         paginationSetting($scope.contactsList[0].totalcontacts);
                 });
             }
@@ -389,7 +400,8 @@ angular.module('MyApp')
                 if (status) {
                     $scope.editContact($scope.voterContactsList[0])
                 }
-
+                $scope.isEdit = false;
+                if($scope.voterContactsList.length > 0)
                 paginationSetting($scope.voterContactsList[0].totalcontacts);
 
             });
@@ -433,6 +445,7 @@ angular.module('MyApp')
                 Entity.FilterNearestResult().save(filter).$promise.then(function (response) {
                     if (!response.status)
                         $scope.voterContactsList = response.voterContactsList;
+                        if($scope.voterContactsList.length > 0)
                         paginationSetting($scope.voterContactsList[0].totalcontacts);
                 });
             }
@@ -505,9 +518,134 @@ angular.module('MyApp')
                 }
             });
         };
-
+        $scope.isEdit = false;
         $scope.editVoterContact = function (contact) {
+            $scope.isEdit = true;
             $scope.model.selected = angular.copy(contact);
+            $scope.getListRecord();
         };
+
+        $scope.FamilyGroup = [];
+        $scope.CheckEntry = function(data)
+        {
+            if($scope.FamilyGroup.length <= 0)
+            {
+                $scope.FamilyGroup.push(data)
+            }
+            else
+            {
+                var recordExist = $scope.FamilyGroup.filter(function(value){
+                    return value.id == data.id
+                });
+
+                if(recordExist.length > 0)
+                {
+                    $scope.FamilyGroup.splice( $scope.FamilyGroup.indexOf(recordExist[0]), 1);
+                }
+                else
+                {
+                    $scope.FamilyGroup.push(data)
+                }
+            }
+        }
+
+        $scope.ConfirmToFamily = function()
+        {
+            if($scope.ConfirmFamily && $scope.ConfirmFamily.length > 0)
+            {
+                $scope.FamilyGroup.map(function(value){
+                    $scope.ConfirmFamily.push(value);
+                });
+            }
+            else
+            $scope.ConfirmFamily = angular.copy($scope.FamilyGroup);
+        }
+
+        $scope.RemoveFromFamily = function(familyrcd)
+        {
+            $scope.ConfirmFamily.splice( $scope.ConfirmFamily.indexOf(familyrcd), 1);
+        }
+
+        $scope.CreateFamily = function()
+        {
+            Entity.CreateFamily().save($scope.ConfirmFamily).$promise.then(function (response) {
+                Swal({
+                    type: response.type,
+                    title: response.title,
+                    text: response.message,
+                }).then(function () {
+                    if (response.status == 0) {
+                        $scope.ConfirmFamily = [];
+                        $scope.FamilyGroup = [];
+                        $('#myModalCreateFamily').modal('hide');
+                        $scope.getVoterContactList();
+                    }
+                })
+            });
+        }
+
+        $scope.ShowFamilyDetails = function(familyid)
+        {
+            if(familyid && familyid > 0)
+            {
+                Entity.ShowFamilyDetails().query({familyid:familyid}).$promise.then(function (response) {
+                    if (response.status == 0)
+                        {
+                            $scope.ConfirmFamily = response.familyDetails;
+                            $('#myModalCreateFamily').modal('show');
+                        }
+                }); 
+            }
+            else
+            {
+                Swal({
+                    type: 'error',
+                    title: '',
+                    text: 'No family members available',
+                }).then(function () {
+                });
+            }
+        }
+
+        $scope.allocateUserForList = function(userdetails)
+        {
+            if($scope.ListusersAllocation && $scope.ListusersAllocation.length > 0)
+            $scope.ListusersAllocation.push({name:userdetails.name,userid:userdetails.id})
+                else
+                {
+                    $scope.ListusersAllocation = [];
+                    $scope.ListusersAllocation.push({name:userdetails.name,userid:userdetails.id})
+                }
+
+                $scope.selecteduser = undefined;
+        }
+
+
+        $scope.getListRecord = function()
+        {
+            Entity.getListRecord().query().$promise.then(function (response) {
+                     if(!response.status)
+                        $scope.listNosList = response.listNosList;
+                });      
+        };
+
+        $scope.SaveListDetails = function()
+        {
+            $scope.ListDetails[0].userAllocation = $scope.ListusersAllocation;
+
+            Entity.SaveListDetails().save($scope.ListDetails[0]).$promise.then(function (response) {
+                Swal({
+                    type: response.type,
+                    title: response.title,
+                    text: response.message,
+                }).then(function () {
+                    if (response.status == 0) {
+                        $scope.getListRecord();
+                    }
+                })
+            });    
+        }
+
+       
 
     }]);
