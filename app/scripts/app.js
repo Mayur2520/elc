@@ -36,6 +36,10 @@ angular.module('MyApp', ['ngResource',
       templateUrl : "public/families.html",
        controller:"EntityController"
     })
+    .when("/lists", {
+      templateUrl : "public/lists.html",
+       controller:"EntityController"
+    })
 	.otherwise({
 		  redirectTo: ''
 		});

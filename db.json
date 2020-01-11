@@ -8,11 +8,20 @@
     }
     ,
     {
-        "Query":"CREATE TABLE IF NOT EXISTS `voters` ( `id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(1000) NULL , `email` VARCHAR(1000) NULL , `mobile1` BIGINT NULL ,  `mobile2` BIGINT NULL, `dob` DATETIME NULL,`gender` VARCHAR(1000) NULL , `address` VARCHAR(2000) NULL,`listno` VARCHAR(500) NULL,`rctno` VARCHAR(500) NULL,`indexno` VARCHAR(500) NULL, `createddate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `createdby` INT NULL, PRIMARY KEY (`id`)) ENGINE = InnoDB;"
+        "Query":"CREATE TABLE IF NOT EXISTS `voters` ( `id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(1000) NULL , `email` VARCHAR(1000) NULL , `mobile1` BIGINT NULL ,  `mobile2` BIGINT NULL, `dob` DATETIME NULL,`gender` VARCHAR(1000) NULL , `address` VARCHAR(2000) NULL,`listno` INT NULL,`rctno` VARCHAR(500) NULL,`indexno` VARCHAR(500) NULL, `createddate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `createdby` INT NULL, PRIMARY KEY (`id`)) ENGINE = InnoDB;ALTER TABLE `voters` ADD IF NOT EXISTS `familyid` INT NULL DEFAULT NULL AFTER `remark`;ALTER TABLE `voters` ADD IF NOT EXISTS `building` VARCHAR(1000) NULL DEFAULT NULL AFTER `address`;ALTER TABLE `voters` ADD IF NOT EXISTS `status` INT NOT NULL DEFAULT '0' AFTER `building`;ALTER TABLE `voters` ADD IF NOT EXISTS `remark` VARCHAR(100) NULL DEFAULT NULL AFTER `status`;"
     }
     ,
     {
         "Query":"CREATE TABLE IF NOT EXISTS `voters_family` ( `id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(1000) NULL , `voterid` INT NULL , `createddate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `createdby` INT NULL, PRIMARY KEY (`id`)) ENGINE = InnoDB;"
+    }
+   
+    ,
+    {
+        "Query":"CREATE TABLE IF NOT EXISTS `listnos` ( `id` INT NOT NULL AUTO_INCREMENT , `listno` VARCHAR(1000) NULL , `oldlistno` VARCHAR(1000) NULL, `createddate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ,`modifieddate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `createdby` INT NULL, PRIMARY KEY (`id`)) ENGINE = InnoDB;"
+    }
+    ,
+    {
+        "Query":"CREATE TABLE IF NOT EXISTS `listallocation` ( `id` INT NOT NULL AUTO_INCREMENT , `listid` INT NULL , `userid` INT NULL, `createddate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `createdby` INT NULL, PRIMARY KEY (`id`)) ENGINE = InnoDB;"
     }
    
   
