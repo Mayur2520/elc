@@ -59,7 +59,13 @@
                 <!-- Modal body -->
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-12 col-md-12 col-lg-12 col-xl-12">
+                        <div class="col-4 col-md-4 col-lg-4">
+                            <a href="./files/voter_list.xlsx" style="text-decoration:none;color:black;"  download><i class="fa fa-download" style="font-size:50px;"></i>
+                                <br>
+                                <b>Download excel file</b>
+                            </a>
+                        </div>
+                        <div class="col-8 col-md-8 col-lg-8 col-xl-8">
                             <div class="custom-file mb-3">
                                 <input type="file" class="custom-file-input" id="customFile" name="filename"
                                     onchange="angular.element(this).scope().UploadFile(this.files)">
@@ -72,6 +78,7 @@
                     </div>
 
                     <div class="row border-top" ng-init="setSettingBehavior('default')">
+                        
                         <div class="btn-group p-2">
                             <button type="button" ng-click="setSettingBehavior('default')"
                                 class="btn btn-primary btn-sm">Default</button>
@@ -87,7 +94,7 @@
                             <div class="table-responsive">
                                 <table class="table">
                                     <thead>
-                                        <th>List No. (A)</th>
+                                        <th>Yadi No. (A)</th>
                                         <th>SR. No. (B)</th>
                                         <th>RCT.No. (C)</th>
                                         <th>Name (D)</th>
@@ -159,7 +166,10 @@
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success" ng-click="ImportContactData()">Import</button>
+
+                    <button type="button"  class="btn btn-success" ng-click="ImportVoterContactData()" ng-disabled="startImport"><span ng-if="startImport"><i class="fa fa-spinner fa-pulse" aria-hidden="true"></i> Importing data Please wait..</span><span ng-if="!startImport">Import</span></button>
+
+                    <!-- <button type="button" class="btn btn-success" ng-click="ImportContactData()">Import</button> -->
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -220,7 +230,7 @@
 
 
         <div class="row ml-auto mr-auto mb-1 mt-1">
-            <div class="col-md-12 col-12 text-center">
+            <div class="col-md-8 col-12 text-center">
 
                 <ul uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" items-per-page="50"
                     max-size="maxSize" ng-click="getVoterContactListPagination(bigCurrentPage)" class="pagination-sm"
@@ -228,16 +238,26 @@
 
 
             </div>
+
+            <div class="col-md-4 col-12">
+                <div class="input-group mt-2">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-sm btn-secondary" ng-click="search.name = undefined"><i class="fa fa-times" aria-hidden="true"></i></button>       
+                    </div>
+              <input class="form-control btn-sm" ng-model="search.name" placeholder="Search">
+    </div>
+            
+            </div>
         </div>
 
 
-        <div class="row">
+        <div class="row" style="font-size: 12px;">
             <div class="table-responsive">
                 <table class="table table-bordered table-striped table-condensed text-nowrap">
                     <thead class="text-center">
                         <th>#</th>
                         <th ng-if="!isEdit"></th>
-                        <th>List No.</th>
+                        <th>Yadi No.</th>
                         <th>SR.No.</th>
                         <th>RCT.No.</th>
                         <th>Name</th>
@@ -248,10 +268,13 @@
                         <th>Date of Birth</th>
                         <th>Address</th>
                         <th>Building Name</th>
+                        <th>Status</th>
+                        <th>Reason</th>
+                        <th>Note</th>
                         <th></th>
                     </thead>
                     <tbody ng-init="getVoterContactList()">
-                        <tr ng-repeat="data in voterContactsList track by $index" ng-include="getTemplate(data)">
+                        <tr ng-repeat="data in voterContactsList | filter:search.name track by $index" ng-include="getTemplate(data)" ng-class="{'text-danger':data.status == 'Disable'}">
                         </tr>
                     </tbody>
                 </table>
@@ -265,7 +288,7 @@
         <td ng-show="!isEdit">
             <input type="checkbox"  ng-model="data.bool" ng-change="CheckEntry(data)"/>
         </td>
-        <td ng-click="ShowFamilyDetails(data.familyid)">{{data.listno}}</td>
+        <td ng-click="ShowFamilyDetails(data.familyid)">{{data.list_no}}</td>
         <td ng-click="ShowFamilyDetails(data.familyid)">{{data.indexno}}</td>
         <td ng-click="ShowFamilyDetails(data.familyid)">{{data.rctno}}</td>
         <td ng-click="ShowFamilyDetails(data.familyid)">{{data.name}}</td>
@@ -276,22 +299,30 @@
         <td ng-click="ShowFamilyDetails(data.familyid)">{{data.dob | date:'dd/MM/yyyy'}}</td>
         <td ng-click="ShowFamilyDetails(data.familyid)">{{data.address}}</td>
         <td ng-click="ShowFamilyDetails(data.familyid)">{{data.building}}</td>
+        <td>{{data.status}}</td>
+        <td>{{data.remark}}</td>
+        <td>{{data.note}}</td>
         <td>
-            <button class="btn btn-warning btn-sm" ng-click="editVoterContact(data)">Edit</button>
-            <button class="btn btn-danger btn-sm" ng-click="deleteVoterContactDetails(data.id)">Delete</button>
+            <i class="fa fa-pencil text-warning" aria-hidden="true" style="cursor:pointer" ng-click="editVoterContact(data)"></i>
+            <!-- <button class="btn btn-warning btn-sm" >Edit</button> -->
+            &nbsp;
+            <i class="fa fa-trash text-danger" style="cursor:pointer" aria-hidden="true" ng-click="deleteVoterContactDetails(data.id)"></i>
+            <!-- <button class="btn btn-danger btn-sm" ng-click="deleteVoterContactDetails(data.id)">Delete</button> -->
         </td>
     </script>
         <script type="text/ng-template" id="edit">
             <td>{{$index +1}}</td>
        <td>
-        <select class="form-control" ng-model="data.listno" ng-options="Obj.id as obj.listno for obj in listNosList">
+        <select class="form-control" ng-model="data.listno" ng-options="obj.id as obj.listno for obj in listNosList">
             <option value="" selected disabled>--Select--</option>
         </select>
-<!--         
-        <input class="form-control btn-sm" placeholder="List No." ng-model="data.listno" autocomplete="off" autofocus/> -->
+        
+      <!--   <input class="form-control btn-sm d-none" placeholder="List No." ng-model="data.listno" autocomplete="off" autofocus/> --> 
     </td>
        <td><input class="form-control btn-sm" placeholder="Sr. No." ng-model="data.indexno" autocomplete="off"/></td>
-       <td><input class="form-control btn-sm" placeholder="RCT.No." ng-model="data.rctno" autocomplete="off"/></td>
+
+       <td><input class="form-control btn-sm" placeholder="RCT No." ng-model="data.rctno" autocomplete="off"/></td>
+
        <td><input class="form-control btn-sm" placeholder="Name" ng-model="data.name" autocomplete="off"/></td>
        <td><select class="form-control btn-sm" ng-model="data.gender" ng-options="obj for obj in ['Male','Female','Other']">
         <option value="" selected disabled>--Select--</option>
@@ -300,11 +331,29 @@
     <td><input class="form-control btn-sm" ng-model="data.mobile2" maxlength="12" placeholder="Alt. Mobile No." autocomplete="off"></td>
     <td><input type="email" class="form-control btn-sm" ng-model="data.email" placeholder="Email" autocomplete="off"></td>
     <td><input class="form-control btn-sm" ui-date="dateOptionsFilters" ng-model="data.dob" placeholder="Date of Birth" autocomplete="off"></td>
-    <td><textarea class="form-control btn-sm" ng-model="data.address" placeholder="Address" autocomplete="off"></textarea></td>
+    <td style="width:200px;"><textarea class="form-control btn-sm" ng-model="data.address" placeholder="Address" autocomplete="off"></textarea></td>
     <td><input class="form-control" ng-model="data.building" placeholder="Building Name"/></td>
+    <td>
+        <select class="form-control" ng-model="data.status" ng-options="_sts for _sts in ['Active','Disable']">
+            <option value="" selected disabled>--Select--</option>
+        </select>
+    </td>
+    <td>
+        <select class="form-control" ng-model="data.remark" ng-options="_sts for _sts in ['Shift','Death','Marriage']">
+            <option value="" selected disabled>--Select--</option>
+        </select>
+    </td>
+    <td style="width:200px;">
+        <textarea ng-model="data.note" class="form-control" placeholder="Note"></textarea>
+    </td>
         <td>
+            
+            <i class="fa fa-floppy-o text-success" aria-hidden="true" style="cursor:pointer;" ng-click="saveVoterContact($index)"></i>
+                &nbsp;
+            <i class="fa fa-refresh text-info" style="cursor:pointer;" aria-hidden="true" ng-click="reset()"></i>
+            <!-- 
             <button class="btn btn-success btn-sm" ng-click="saveVoterContact($index)">Save</button>
-            <button class="btn btn-info btn-sm" ng-click="reset()">Cancel</button>
+            <button class="btn btn-info btn-sm" ng-click="reset()">Cancel</button> -->
         </td>
     </script>
 

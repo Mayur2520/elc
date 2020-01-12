@@ -15,10 +15,7 @@ var express = require('express'),
 
 	let http = require('http').Server(app);
 
-	// Socket setting
-	let io = require('socket.io')(http);
-	require('./lib/config/socket.Ctrl')(io);
-	// Socket setting
+
 
 app.use(bodypareser.urlencoded({limit:'20mb',extended:true}));
 app.use(bodypareser.json({limit:'20mb'}));
@@ -34,5 +31,6 @@ var server = app.listen(parseInt(env.port),function(){
 	console.log('server start on '+ server.address().port+ ' port');
 })	
 
-
+ let io = require('socket.io')(server);
+	require('./lib/config/socket.Ctrl')(io);
 

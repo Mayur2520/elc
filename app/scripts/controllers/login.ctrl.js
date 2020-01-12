@@ -326,7 +326,21 @@ angular.module('MyApp')
 		function getSession()
         {
             Authenticate.getSession().query().$promise.then(function (response) {
-                $scope.userDetails = response;    
+				$scope.userDetails = response;    
+				if($location.path() != '/')
+				{
+				if( $scope.userDetails.message == "Unauthorized")
+				{
+					Swal({
+						type: 'error',
+						title: 'Session Expire',
+						text: 'Your last login session has expire.',
+					}).then(function () {
+						
+					})
+					$scope.RedirectLink('/');
+				}
+			}
             });   
 		} getSession();
 

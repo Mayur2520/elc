@@ -2,6 +2,10 @@ angular.module('MyApp')
     .controller('EntityController', ['$scope', '$rootScope', '$http', '$route', '$location', '$window', '$timeout', 'Upload', 'Entity', 'Authenticate', '$filter', function ($scope, $rootScope, $http, $route, $location, $window, $timeout, Upload, Entity, Authenticate, $filter) {
 
 
+        var socket = io.connect('http://103.252.7.5:8092');
+
+
+        
         $scope.dateOptionsFilters = {
             changeYear: true,
             changeMonth: true,
@@ -172,7 +176,7 @@ angular.module('MyApp')
 
         $scope.nearestContcatFields = [{
                 field: 'listno',
-                title: "List No."
+                title: "Yadi No."
             },
             {
                 field: 'indexno',
@@ -452,6 +456,84 @@ angular.module('MyApp')
         }
 
 
+
+
+
+        $scope.startImportingVoterContacts = function (excelData) {
+            if ($scope.settingBehavior == 'default') {
+                Entity.ImportVoterContactDetails().save(excelData).$promise.then(function (response) {
+                    Swal({
+                        type: response.type,
+                        title: response.title,
+                        text: response.message,
+                    }).then(function () {
+                        if (response.status == 0) {
+
+                        } else {
+                            $scope.resetSelection();
+                            $('#myModalImportVoterContacts').modal('hide');
+                            $scope.startImport  = false;
+                            $scope.getVoterContactList();
+                        }
+                    });
+                });
+            } else {
+                Entity.ImportVoterContactDetailsCustomeSetting().save({
+                    excelDate: excelData,
+                    setting: $scope.CustomersFields
+                }).$promise.then(function (response) {
+                    Swal({
+                        type: response.type,
+                        title: response.title,
+                        text: response.message,
+                    }).then(function () {
+                        if (response.status == 0) {
+
+                        } else {
+                            $scope.resetSelection();
+                            $('#myModalImportVoterContacts').modal('hide');
+                            $scope.getVoterContactList();
+                        }
+                    });
+                });
+            }
+        }
+
+        $scope.ImportContactData = function () {
+
+            $scope.startImport  = true;
+
+            var file = $scope.SelectedFileForUpload;
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var data = e.target.result;
+                    //XLSX from js-xlsx library , which I will add in page view page
+                    var workbook = XLSX.read(data, {
+                        type: 'binary'
+                    });
+                    var sheetName = workbook.SheetNames[0];
+                    var excelData = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+                    if (excelData.length > 0) {
+                        $scope.startImportingVoterContacts(excelData);
+                    } else {
+                        $scope.Message = "No data found";
+                    }
+                }
+                reader.onerror = function (ex) {
+                    console.log(ex);
+                }
+
+                reader.readAsBinaryString(file);
+            }
+
+
+        }
+
+
+
+
+
         $scope.AddNewVoterContact = function () {
             Entity.AddNewVoterContact().query({}).$promise.then(function (response) {
                 if (response.status == 0)
@@ -646,6 +728,11 @@ angular.module('MyApp')
             });    
         }
 
+        $scope.getListDetails = function(data)
+        {
+            $scope.ListDetails = [];
+            $scope.ListDetails[0] = angular.copy(data)
+        }
        
 
     }]);

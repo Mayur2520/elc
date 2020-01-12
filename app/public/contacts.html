@@ -16,7 +16,13 @@
                 <!-- Modal body -->
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-12 col-md-12 col-lg-12 col-xl-12">
+                        <div class="col-4 col-md-4 col-lg-4">
+                            <a href="./files/contacts.xlsx" style="text-decoration:none;color:black;"  download><i class="fa fa-download" style="font-size:50px;"></i>
+                                <br>
+                                <b>Download excel file</b>
+                            </a>
+                        </div>
+                        <div class="col-8 col-md-8 col-lg-8 col-xl-8">
                             <div class="custom-file mb-3">
                                 <input type="file" class="custom-file-input" id="customFile" name="filename"
                                     onchange="angular.element(this).scope().UploadFile(this.files)">
@@ -159,29 +165,38 @@
             </div>
         
             <div class="row ml-auto mr-auto mb-1 mt-1">
-                <div class="col-md-12 col-12 text-center">
+                <div class="col-md-8 col-12 text-center">
         
                     <ul uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" items-per-page="50" max-size="maxSize" ng-click="getContactListFromPagination(bigCurrentPage)" class="pagination-sm" boundary-links="true" force-ellipses="true"></ul>
         
                 
                 </div>
+                <div class="col-md-4 col-12">
+                    <div class="input-group mt-2">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-sm btn-secondary" ng-click="search.name = undefined"><i class="fa fa-times" aria-hidden="true"></i></button>       
+                        </div>
+                  <input class="form-control btn-sm" ng-model="search.name" placeholder="Search">
+        </div>
+                
+                </div>
             </div>
         
 
-        <div class="row">
+        <div class="row" style="font-size: 12px;">
             <div class="table-responsive">
                 <table class="table table-bordered table-striped table-condensed">
                     <thead class="text-center">
                         <th>#</th>
                         <th>Name</th>
-                        <th>Gender</th>
-                        <th>Mobile No.</th>
-                        <th>Alt. Mobile No.</th>
+                        <th style="width: 35px;">Gender</th>
+                        <th style="width: 60px;">Mobile</th>
+                        <th style="width: 60px;">Alt.Mobile</th>
                         <th>Email</th>
                         <th></th>
                     </thead>
                     <tbody ng-init="getContactList()">
-                        <tr ng-repeat="data in contactsList track by $index" ng-include="getTemplate(data)">
+                        <tr ng-repeat="data in contactsList | filter: search.name track by $index" ng-include="getTemplate(data)">
                         </tr>
                     </tbody>
                 </table>
@@ -196,9 +211,18 @@
         <td>{{data.mobile2}}</td>
         <td>{{data.email}}</td>
         <td class="text-center">
-            <button class="btn btn-warning btn-sm" ng-click="editContact(data)">Edit</button>
+
+            <i class="fa fa-pencil text-warning" aria-hidden="true" style="cursor:pointer" ng-click="editContact(data)"></i>
+            
+            &nbsp;
+            <i class="fa fa-trash text-danger" style="cursor:pointer" aria-hidden="true" ng-click="deleteContactDetails(data.id)"></i>
+
+            &nbsp;
+            <i class="fa fa-clone text-secondary" style="cursor:pointer" aria-hidden="true" ng-click="CopyContacttoNearest(data)"></i>
+
+           <!--  <button class="btn btn-warning btn-sm" ng-click="editContact(data)">Edit</button>
             <button class="btn btn-danger btn-sm" ng-click="deleteContactDetails(data.id)">Delete</button>
-            <button class="btn btn-secondary btn-sm" ng-click="CopyContacttoNearest(data)">Copy To Nearest</button>
+            <button class="btn btn-secondary btn-sm" ng-click="CopyContacttoNearest(data)">Copy To Nearest</button> -->
         </td>
     </script>
         <script type="text/ng-template" id="edit">
@@ -211,8 +235,13 @@
     <td><input class="form-control btn-sm" ng-model="data.mobile2" maxlength="12" placeholder="Alt. Mobile No." autocomplete="off"></td>
     <td><input type="email" class="form-control btn-sm" ng-model="data.email" placeholder="Email" autocomplete="off"></td>
         <td class="text-center">
-            <button class="btn btn-success btn-sm" ng-click="saveContact($index)">Save</button>
-            <button class="btn btn-info btn-sm" ng-click="reset()">Cancel</button>
+
+            <i class="fa fa-floppy-o text-success" aria-hidden="true" style="cursor:pointer" ng-click="saveContact($index)"></i>
+                &nbsp;
+            <i class="fa fa-refresh text-info" aria-hidden="true" style="cursor:pointer" ng-click="reset()"></i>
+
+            <!-- <button class="btn btn-success btn-sm" ng-click="saveContact($index)">Save</button>
+            <button class="btn btn-info btn-sm" ng-click="reset()">Cancel</button> -->
         </td>
     </script>
 
