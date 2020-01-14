@@ -397,8 +397,12 @@ angular.module('MyApp')
         // NEAREST CONTACTS
 
 
-        $scope.getVoterContactList = function (status) {
-            Entity.getVoterContactList().query({}).$promise.then(function (response) {
+        $scope.getVoterContactList = function (status,sort) {
+            if(sort == undefined || sort == null || sort == '')
+            {
+                sort = 'ASC'
+            }
+            Entity.getVoterContactList().query({sort:sort}).$promise.then(function (response) {
                 if (!response.status)
                     $scope.voterContactsList = response.voterContactsList;
                 if (status) {
@@ -537,7 +541,7 @@ angular.module('MyApp')
         $scope.AddNewVoterContact = function () {
             Entity.AddNewVoterContact().query({}).$promise.then(function (response) {
                 if (response.status == 0)
-                    $scope.getVoterContactList('newEntry');
+                    $scope.getVoterContactList('newEntry','DESC');
             });
         }
 
@@ -568,7 +572,7 @@ angular.module('MyApp')
                 }).then(function () {
                     if (response.status == 0) {
                         $scope.reset();
-                        $scope.getVoterContactList();
+                        $scope.getVoterContactList('','ASC');
                     }
                 })
             });
@@ -594,7 +598,7 @@ angular.module('MyApp')
                             title: response.title,
                             text: response.message,
                         }).then(function () {
-                            $scope.getVoterContactList();
+                            $scope.getVoterContactList('','ASC');
                         })
                     });
                 }
@@ -645,6 +649,16 @@ angular.module('MyApp')
 
         $scope.RemoveFromFamily = function(familyrcd)
         {
+            if(familyrcd.id)
+            {
+                Entity.RemoveFromFamily().query({memberid:familyrcd.id}).$promise.then(function (response) {
+                    if (response.status == 0)
+                        {
+                            $scope.ConfirmFamily.splice( $scope.ConfirmFamily.indexOf(familyrcd), 1);
+                        }
+                }); 
+            }
+            else
             $scope.ConfirmFamily.splice( $scope.ConfirmFamily.indexOf(familyrcd), 1);
         }
 
@@ -660,7 +674,7 @@ angular.module('MyApp')
                         $scope.ConfirmFamily = [];
                         $scope.FamilyGroup = [];
                         $('#myModalCreateFamily').modal('hide');
-                        $scope.getVoterContactList();
+                        $scope.getVoterContactList('','ASC');
                     }
                 })
             });
@@ -728,10 +742,26 @@ angular.module('MyApp')
             });    
         }
 
-        $scope.getListDetails = function(data)
+/*         $scope.getListDetails = function(data)
         {
             $scope.ListDetails = [];
             $scope.ListDetails[0] = angular.copy(data)
+        } */
+       
+        $scope.getListRecordDetails = function(listid)
+        {
+            Entity.getListRecordDetails().query({listid:listid}).$promise.then(function (response) {
+                if(response.status == 0)
+                   {
+                     $scope.ListDetails = response.listrecordDetails;
+                     $scope.ListusersAllocation = [];
+                     $scope.ListDetails.map(function(value){
+                        $scope.ListusersAllocation.push({name:value.name,userid:value.userid})
+                     });
+                    
+                   }
+           });      
+            
         }
        
 

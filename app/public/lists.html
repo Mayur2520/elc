@@ -33,7 +33,7 @@
                                 <td>{{_data.listno}}</td>
                                 <td>{{_data.oldlistno}}</td>
                                 <td></td>
-                                <td class="text-center text-nowrap"><button class="btn btn-warning btn-sm" ng-click="getListDetails(_data)"  data-toggle="modal" data-target="#modalListDetails"><i class="fa fa-pencil"></i> Edit</button>&nbsp;<button class="btn btn-danger btn-sm"  ng-if="_data.role != 'Superadmin'" ng-click="deleteListDetails(_data.id)"><i class="fa fa-trash"></i> Delete</button></td>
+                                <td class="text-center text-nowrap"><button class="btn btn-warning btn-sm" ng-click="getListRecordDetails(_data.id)"  data-toggle="modal" data-target="#modalListDetails"><i class="fa fa-pencil"></i> Edit</button>&nbsp;<button class="btn btn-danger btn-sm"  ng-if="_data.role != 'Superadmin'" ng-click="deleteListDetails(_data.id)"><i class="fa fa-trash"></i> Delete</button></td>
                             </tr>
                         </tbody>
                     </table>

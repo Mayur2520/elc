@@ -52,7 +52,7 @@ angular.module('MyApp')
 
         getVoterContactList: function()
         {
-            return $resource('/api/getVoterContactList/',
+            return $resource('/api/getVoterContactList/:sort',
                 {}, { 'query': { method: 'GET',isArray:false } });
         },
         AddNewVoterContact: function()
@@ -111,6 +111,11 @@ angular.module('MyApp')
             return $resource('/api/ShowFamilyDetails/:familyid',
                 {}, { 'query': { method: 'GET',isArray:false } });
         },
+        RemoveFromFamily: function()
+        {
+            return $resource('/api/RemoveFromFamily/:memberid',
+                {}, { 'query': { method: 'GET',isArray:false } });
+        },
 
         SaveListDetails: function()
         {
@@ -121,6 +126,12 @@ angular.module('MyApp')
         getListRecord: function()
         {
             return $resource('/api/getListRecord/',
+                {}, { 'query': { method: 'GET',isArray:false } });
+        },
+
+        getListRecordDetails: function()
+        {
+            return $resource('/api/getListRecordDetails/:listid',
                 {}, { 'query': { method: 'GET',isArray:false } });
         },
     }
