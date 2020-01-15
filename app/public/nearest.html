@@ -26,7 +26,8 @@
                                         <td>{{_family.name}}</td>
                                         <td>{{_family.gender}}</td>
                                         <td>{{_family.mobile1}}</td>
-                                        <td>&nbsp;<i class="fa fa-trash text-danger" aria-hidden="true" ng-click="RemoveFromFamily(_family)"></i>
+                                        <td>&nbsp;<i class="fa fa-trash text-danger" aria-hidden="true"
+                                                ng-click="RemoveFromFamily(_family)"></i>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -34,9 +35,10 @@
                         </div>
                     </div>
                 </div>
-                 <!-- Modal footer -->
-                 <div class="modal-footer">
-                    <button type="button" ng-if="ConfirmFamily[0].familyid" class="btn btn-info" data-dismiss="modal" ng-click="addNewMemeber()">Add new Member</button>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" ng-if="ConfirmFamily[0].familyid" class="btn btn-info" data-dismiss="modal"
+                        ng-click="addNewMemeber()">Add new Member</button>
                     <button type="button" class="btn btn-success" ng-click="CreateFamily()">Save</button>
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
@@ -60,7 +62,8 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-4 col-md-4 col-lg-4">
-                            <a href="./files/voter_list.xlsx" style="text-decoration:none;color:black;"  download><i class="fa fa-download" style="font-size:50px;"></i>
+                            <a href="./files/voter_list.xlsx" style="text-decoration:none;color:black;" download><i
+                                    class="fa fa-download" style="font-size:50px;"></i>
                                 <br>
                                 <b>Download excel file</b>
                             </a>
@@ -78,7 +81,7 @@
                     </div>
 
                     <div class="row border-top" ng-init="setSettingBehavior('default')">
-                        
+
                         <div class="btn-group p-2">
                             <button type="button" ng-click="setSettingBehavior('default')"
                                 class="btn btn-primary btn-sm">Default</button>
@@ -167,7 +170,10 @@
                 <!-- Modal footer -->
                 <div class="modal-footer">
 
-                    <button type="button"  class="btn btn-success" ng-click="ImportVoterContactData()" ng-disabled="startImport"><span ng-if="startImport"><i class="fa fa-spinner fa-pulse" aria-hidden="true"></i> Importing data Please wait..</span><span ng-if="!startImport">Import</span></button>
+                    <button type="button" class="btn btn-success" ng-click="ImportVoterContactData()"
+                        ng-disabled="startImport"><span ng-if="startImport"><i class="fa fa-spinner fa-pulse"
+                                aria-hidden="true"></i> Importing data Please wait..</span><span
+                            ng-if="!startImport">Import</span></button>
 
                     <!-- <button type="button" class="btn btn-success" ng-click="ImportContactData()">Import</button> -->
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -191,7 +197,8 @@
                         <button class="btn btn-info btn-sm" data-toggle="modal"
                             data-target="#myModalImportVoterContacts">Import Contacts</button>
 
-                        <button class="btn btn-info btn-sm" ng-if="FamilyGroup.length > 0" ng-click="ConfirmToFamily()" data-toggle="modal" data-target="#myModalCreateFamily">Add
+                        <button class="btn btn-info btn-sm" ng-if="FamilyGroup.length > 0" ng-click="ConfirmToFamily()"
+                            data-toggle="modal" data-target="#myModalCreateFamily">Add
                             to Family</button>
                     </div>
                     <div class="col-md-6 col-lg-4 col-sm-6 col-12 ml-auto">
@@ -242,11 +249,12 @@
             <div class="col-md-4 col-12">
                 <div class="input-group mt-2">
                     <div class="input-group-prepend">
-                        <button class="btn btn-sm btn-secondary" ng-click="search.name = undefined"><i class="fa fa-times" aria-hidden="true"></i></button>       
+                        <button class="btn btn-sm btn-secondary" ng-click="search.name = undefined"><i
+                                class="fa fa-times" aria-hidden="true"></i></button>
                     </div>
-              <input class="form-control btn-sm" ng-model="search.name" placeholder="Search">
-    </div>
-            
+                    <input class="form-control btn-sm" ng-model="search.name" placeholder="Search">
+                </div>
+
             </div>
         </div>
 
@@ -256,7 +264,7 @@
                 <table class="table table-bordered table-striped table-condensed text-nowrap">
                     <thead class="text-center">
                         <th>#</th>
-                        <th ng-if="!isEdit"></th>
+                        <th></th>
                         <th>Yadi No.</th>
                         <th>SR.No.</th>
                         <th>RCT.No.</th>
@@ -273,8 +281,9 @@
                         <th>Note</th>
                         <th></th>
                     </thead>
-                    <tbody ng-init="getVoterContactList()">
-                        <tr ng-repeat="data in voterContactsList | filter:search.name track by $index" ng-include="getTemplate(data)" ng-class="{'text-danger':data.status == 'Disable'}">
+                    <tbody ng-init="getVoterContactList();getListRecord()">
+                        <tr ng-repeat="data in voterContactsList | filter:search.name track by $index"
+                            ng-include="getTemplate(data)" ng-class="{'text-danger':data.status == 'Disable'}">
                         </tr>
                     </tbody>
                 </table>
@@ -285,7 +294,7 @@
 
         <script type="text/ng-template" id="display">
             <td>{{$index +1}}</td>
-        <td ng-show="!isEdit">
+        <td>
             <input type="checkbox"  ng-model="data.bool" ng-change="CheckEntry(data)"/>
         </td>
         <td ng-click="ShowFamilyDetails(data.familyid)">{{data.list_no}}</td>
@@ -312,6 +321,7 @@
     </script>
         <script type="text/ng-template" id="edit">
             <td>{{$index +1}}</td>
+            <td></td>
        <td>
         <select class="form-control" ng-model="data.listno" ng-options="obj.id as obj.listno for obj in listNosList">
             <option value="" selected disabled>--Select--</option>

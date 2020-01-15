@@ -463,6 +463,46 @@ angular.module('MyApp')
 
 
 
+        $scope.startImportingContacts = function (excelData) {
+            if ($scope.settingBehavior == 'default') {
+                Entity.ImportContactDetails().save(excelData).$promise.then(function (response) {
+                    Swal({
+                        type: response.type,
+                        title: response.title,
+                        text: response.message,
+                    }).then(function () {
+                        if (response.status == 0) {
+
+                        } else {
+                            $scope.resetSelection();
+                            $('#myModalImportContacts').modal('hide');
+                            $scope.startImport  = false;
+                            $scope.getContactList();
+                        }
+                    });
+                });
+            } else {
+                Entity.ImportContactDetailsCustomeSetting().save({
+                    excelDate: excelData,
+                    setting: $scope.CustomersFields
+                }).$promise.then(function (response) {
+                    Swal({
+                        type: response.type,
+                        title: response.title,
+                        text: response.message,
+                    }).then(function () {
+                        if (response.status == 0) {
+
+                        } else {
+                            $scope.resetSelection();
+                            $('#myModalImportContacts').modal('hide');
+                            $scope.getContactList();
+                        }
+                    });
+                });
+            }
+        }
+
         $scope.startImportingVoterContacts = function (excelData) {
             if ($scope.settingBehavior == 'default') {
                 Entity.ImportVoterContactDetails().save(excelData).$promise.then(function (response) {
@@ -504,6 +544,38 @@ angular.module('MyApp')
         }
 
         $scope.ImportContactData = function () {
+
+            $scope.startImport  = true;
+
+            var file = $scope.SelectedFileForUpload;
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var data = e.target.result;
+                    //XLSX from js-xlsx library , which I will add in page view page
+                    var workbook = XLSX.read(data, {
+                        type: 'binary'
+                    });
+                    var sheetName = workbook.SheetNames[0];
+                    var excelData = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+                    if (excelData.length > 0) {
+                        $scope.startImportingContacts(excelData);
+                    } else {
+                        $scope.Message = "No data found";
+                    }
+                }
+                reader.onerror = function (ex) {
+                    console.log(ex);
+                }
+
+                reader.readAsBinaryString(file);
+            }
+
+
+        }
+
+
+        $scope.ImportVoterContactData = function () {
 
             $scope.startImport  = true;
 
