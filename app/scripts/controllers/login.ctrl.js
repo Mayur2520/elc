@@ -1,5 +1,5 @@
 angular.module('MyApp')
-	.controller('LoginController', ['$scope', '$http', '$route', '$location', '$window', '$timeout', 'Upload', 'Authenticate', function ($scope, $http, $route, $location, $window, $timeout, Upload, Authenticate) {
+	.controller('LoginController', ['$scope','$rootScope', '$http', '$route', '$location', '$window', '$timeout', 'Upload', 'Authenticate', function ($scope,$rootScope, $http, $route, $location, $window, $timeout, Upload, Authenticate) {
 
 		$scope.fieltype = 'password';
 		$scope.AuthenticateUser = function () {
@@ -327,6 +327,7 @@ angular.module('MyApp')
         {
             Authenticate.getSession().query().$promise.then(function (response) {
 				$scope.userDetails = response;    
+				 
 				if($location.path() != '/')
 				{
 				if( $scope.userDetails.message == "Unauthorized")

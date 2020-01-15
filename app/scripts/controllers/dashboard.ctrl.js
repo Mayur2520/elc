@@ -1,5 +1,5 @@
 angular.module('MyApp')
-	.controller('DashboardController', ['$scope', '$http', '$route', '$location', '$window', '$timeout', 'Upload', 'Dashboard', function ($scope, $http, $route, $location, $window, $timeout, Upload, Dashboard) {
+	.controller('DashboardController', ['$scope','$rootScope', '$http', '$route', '$location', '$window', '$timeout', 'Upload', 'Dashboard','Authenticate', function ($scope,$rootScope, $http, $route, $location, $window, $timeout, Upload, Dashboard, Authenticate) {
         
 
         $scope.dateOptionsFilters = {
@@ -47,7 +47,7 @@ angular.module('MyApp')
             Dashboard.getDashboardValues().save([{from_dsDate:formatDate(from_dsDate),to_dsDate:formatDate(to_dsDate)}]).$promise.then(function (response) {
                 if(!response.status)
                 $scope.dashboardValues = response.dashboardValues;
-                console.log($scope.dashboardValues )
+                console.log($scope.dashboardValues)
             });
         };
 
@@ -56,6 +56,18 @@ angular.module('MyApp')
             console.log('-------------------- 1')
             Dashboard.ExeNotification('sample User',"Sample message sent from device")
         }
+
+
+        $scope.RedirectLink = function (path) {
+			$location.path(path);
+        }
+
+        function getSession()
+        {
+            Authenticate.getSession().query().$promise.then(function (response) {
+				$scope.userDetails = response;    
+            });   
+		} getSession();
 
     }]);
 

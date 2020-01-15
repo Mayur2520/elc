@@ -40,6 +40,10 @@ angular.module('MyApp', ['ngResource',
       templateUrl : "public/lists.html",
        controller:"EntityController"
     })
+    .when("/birthdays", {
+      templateUrl : "public/birthdays.html",
+       controller:"EntityController"
+    })
 	.otherwise({
 		  redirectTo: ''
 		});

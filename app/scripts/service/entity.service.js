@@ -134,5 +134,11 @@ angular.module('MyApp')
             return $resource('/api/getListRecordDetails/:listid',
                 {}, { 'query': { method: 'GET',isArray:false } });
         },
+
+        getBirthdaysList: function()
+        {
+            return $resource('/api/getBirthdaysList/',
+                {}, { 'query': { method: 'GET',isArray:false } });
+        },
     }
   }]);

@@ -763,6 +763,17 @@ angular.module('MyApp')
            });      
             
         }
+
+        $scope.getBirthdaysList = function(listid)
+        {
+            Entity.getBirthdaysList().query().$promise.then(function (response) {
+                if(response.status == 0)
+                   {
+                     $scope.birthdaysList = response.dashboardValues;
+                   }
+           });      
+            
+        }
        
 
     }]);
