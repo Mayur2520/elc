@@ -266,7 +266,6 @@ angular.module('MyApp')
             $scope.CustomersFields.map(function (custvalue) {
 
                 var recordExist = $filter('filter')($scope.ExcelFields, custvalue.excelField)
-                console.log(recordExist)
                 if (recordExist.length > 0)
                     recordExist[0].disabled = true;
             });

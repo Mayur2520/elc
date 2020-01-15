@@ -47,13 +47,11 @@ angular.module('MyApp')
             Dashboard.getDashboardValues().save([{from_dsDate:formatDate(from_dsDate),to_dsDate:formatDate(to_dsDate)}]).$promise.then(function (response) {
                 if(!response.status)
                 $scope.dashboardValues = response.dashboardValues;
-                console.log($scope.dashboardValues)
             });
         };
 
         $scope.SendNotifuication = function()
         {
-            console.log('-------------------- 1')
             Dashboard.ExeNotification('sample User',"Sample message sent from device")
         }
 
