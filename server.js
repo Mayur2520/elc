@@ -34,3 +34,4 @@ var server = app.listen(parseInt(env.port),function(){
  let io = require('socket.io')(server);
 	require('./lib/config/socket.Ctrl')(io);
 
+	server.timeout = 600000;

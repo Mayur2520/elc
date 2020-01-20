@@ -2,9 +2,10 @@ angular.module('MyApp')
     .controller('EntityController', ['$scope', '$rootScope', '$http', '$route', '$location', '$window', '$timeout', 'Upload', 'Entity', 'Authenticate', '$filter', function ($scope, $rootScope, $http, $route, $location, $window, $timeout, Upload, Entity, Authenticate, $filter) {
 
 
-        var socket = io.connect('http://103.252.7.5:8092');
+        
 
 
+        // socket
         
         $scope.dateOptionsFilters = {
             changeYear: true,
