@@ -36,6 +36,12 @@ angular.module('MyApp')
           {}, { 'save': { method: 'POST',isArray:false } });
         },
 
+        importCsvContactDetails: function()
+        {
+          return $resource('/api/importCsvContactDetails',
+          {}, { 'save': { method: 'POST',isArray:false } });
+        },
+
         ImportContactDetailsCustomeSetting: function()
         {
           return $resource('/api/ImportContactDetailsCustomeSetting',
