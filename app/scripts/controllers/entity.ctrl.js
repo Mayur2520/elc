@@ -847,5 +847,66 @@ angular.module('MyApp')
             
         }
        
+        $scope.excel = true;
+        $scope.SwitchTab = function(tab,disabletab)
+        {
+            eval('$scope.'+tab+' = true');
+            eval('$scope.'+disabletab+' = false');
+        }
+
+        $scope.DownloadSampleCSV = function(){
+            var a = document.createElement("a");
+            var json_pre = '[{"Name":"","Gender":"","Email":"","Mobile_No":"","alt_Mobile":""}]'
+            
+            var csv = Papa.unparse(json_pre);
+       
+            if (window.navigator.msSaveOrOpenBlob) {
+              var blob = new Blob([decodeURIComponent(encodeURI(csv))], {
+                type: "text/csv;charset=utf-8;"
+              });
+              navigator.msSaveBlob(blob, 'sample.csv');
+            } else {
+       
+              a.href = 'data:attachment/csv;charset=utf-8,' + encodeURI(csv);
+              a.target = '_blank';
+              a.download = 'Contacts.csv';
+              document.body.appendChild(a);
+              a.click();
+            }
+          }
+
+          $scope.ImportCsvContactData = function () {
+            $scope.startImport  = true;
+
+            var file = document.getElementById("bulkDirectFile").files[0];
+            if (file) {
+                
+                Papa.parse(file, {
+                    download: true,
+                    header: true,
+                    skipEmptyLines: true,
+                    error: function(err, file, inputElem, reason) { },
+                    complete: function(results) {
+                       
+                        Entity.importCsvContactDetails().save(results.data).$promise.then(function (response) {
+                            Swal({
+                                type: response.type,
+                                title: response.title,
+                                text: response.message,
+                            }).then(function () {
+                                if (response.status == 0) {
+                                    $scope.getListRecord();
+                                }
+                            })
+                        });    
+
+                         
+                    }
+                  });   
+            }
+
+
+        }
+
 
     }]);

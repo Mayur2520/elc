@@ -17,8 +17,8 @@ var express = require('express'),
 
 
 
-app.use(bodypareser.urlencoded({limit:'20mb',extended:true}));
-app.use(bodypareser.json({limit:'20mb'}));
+app.use(bodypareser.urlencoded({limit:'100mb',extended:true}));
+app.use(bodypareser.json({limit:'100mb'}));
 	
 app.use(express.static(path.join(__dirname,'app')));
 
@@ -34,4 +34,8 @@ var server = app.listen(parseInt(env.port),function(){
  let io = require('socket.io')(server);
 	require('./lib/config/socket.Ctrl')(io);
 
+<<<<<<< HEAD
 	server.timeout = 600000;
+=======
+server.timeout = 600000;
+>>>>>>> cb230005b493dd8baef2c48ec2c3c419fc81d470

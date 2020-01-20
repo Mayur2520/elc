@@ -15,24 +15,67 @@
 
                 <!-- Modal body -->
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-4 col-md-4 col-lg-4">
-                            <a href="./files/contacts.xlsx" style="text-decoration:none;color:black;"  download><i class="fa fa-download" style="font-size:50px;"></i>
-                                <br>
-                                <b>Download excel file</b>
-                            </a>
+                    
+
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                          <a class="nav-link active" data-toggle="tab" ng-click="SwitchTab('excel','csv')">Excel</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" data-toggle="tab" ng-click="SwitchTab('csv','excel')">CSV</a>
+                        </li>
+                      </ul>
+
+                      <!-- Tab panes -->
+                    <div >
+                        <div ng-show="excel" class="container tab-pane"><br>
+                       
+                            <div class="row">
+                                <div class="col-4 col-md-4 col-lg-4">
+                                    <a href="./files/contacts.xlsx" style="text-decoration:none;color:black;"  download><i class="fa fa-download" style="font-size:50px;"></i>
+                                        <br>
+                                        <b>Download excel file</b>
+                                    </a>
+                                </div>
+                                <div class="col-8 col-md-8 col-lg-8 col-xl-8">
+                                    <div class="custom-file mb-3">
+                                        <input type="file" class="custom-file-input" id="customFile" name="filename"
+                                            onchange="angular.element(this).scope().UploadFile(this.files)">
+                                        <label class="custom-file-label" for="customFile">Choose file</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="text-danger">{{errormsg}}</label>
+                                </div>
+                            </div>
+
                         </div>
-                        <div class="col-8 col-md-8 col-lg-8 col-xl-8">
-                            <div class="custom-file mb-3">
-                                <input type="file" class="custom-file-input" id="customFile" name="filename"
-                                    onchange="angular.element(this).scope().UploadFile(this.files)">
-                                <label class="custom-file-label" for="customFile">Choose file</label>
+                        <div ng-show="csv" class="container tab-pane "><br>
+                          
+                            <div class="row">
+                                <div class="col-4 col-md-4 col-lg-4">
+                                    <a href="" ng-click="DownloadSampleCSV()" style="text-decoration:none;color:black;"  download><i class="fa fa-download" style="font-size:50px;"></i>
+                                        <br>
+                                        <b>Download CSV file</b>
+                                    </a>
+                                </div>
+                                <div class="col-8 col-md-8 col-lg-8 col-xl-8">
+                                    <div class="custom-file mb-3">
+                                        <input type="file" class="form-control" id="bulkDirectFile" placeholder="Choose CSV file" ng-model="prd.bulk_direct_file" required accept=".csv">
+                                        <!-- <label class="custom-file-label" for="customFile">Choose file</label> -->
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="text-danger">{{errormsg}}</label>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-12">
-                            <label class="text-danger">{{errormsg}}</label>
-                        </div>
                     </div>
+
+                    
+                   
+
+
 
                     <div class="row border-top" ng-init="setSettingBehavior('default')">
                         <div class="btn-group p-2">
@@ -110,8 +153,15 @@
                 </div>
 
                  <!-- Modal footer -->
-                 <div class="modal-footer">
+                 <div class="modal-footer"  ng-show="excel">
                     <button type="button"  class="btn btn-success" ng-click="ImportContactData()" ng-disabled="startImport"><span ng-if="startImport"><i class="fa fa-spinner fa-pulse" aria-hidden="true"></i> Importing data Please wait..</span><span ng-if="!startImport">Import</span></button>
+
+                    
+
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+                 <div class="modal-footer"  ng-show="csv">
+                    <button type="button"  class="btn btn-success" ng-click="ImportCsvContactData()" ng-disabled="startImport"><span ng-if="startImport"><i class="fa fa-spinner fa-pulse" aria-hidden="true"></i> Importing data Please wait..</span><span ng-if="!startImport">Import</span></button>
 
                     
 
