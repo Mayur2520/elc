@@ -75,7 +75,7 @@
                                             <ul>
                                                 <li  ng-repeat="_chips in ListusersAllocation" class="chip ml-1">
                                                     
-                                                    {{_chips.name}} &nbsp; <i class="fa fa-times-circle text-secondary" aria-hidden="true"></i>
+                                                    {{_chips.name}} &nbsp; <i class="fa fa-times-circle text-secondary" aria-hidden="true" ng-click="RemoveUserFromList(_chips.id,ListDetails[0].id)"></i>
                                                       
                                                 </li>
                                             </ul>

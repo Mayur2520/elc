@@ -141,6 +141,14 @@ angular.module('MyApp')
                 {}, { 'query': { method: 'GET',isArray:false } });
         },
 
+
+        RemoveUserFromList: function()
+        {
+            return $resource('/api/RemoveUserFromList/:allocationid',
+                {}, { 'query': { method: 'GET',isArray:false } });
+        },
+
+
         getBirthdaysList: function()
         {
             return $resource('/api/getBirthdaysList/',

@@ -826,15 +826,26 @@ angular.module('MyApp')
                 if(response.status == 0)
                    {
                      $scope.ListDetails = response.listrecordDetails;
+                     $scope.allocatedusers = response.allocatedusers;
                      $scope.ListusersAllocation = [];
-                     $scope.ListDetails.map(function(value){
-                        $scope.ListusersAllocation.push({name:value.name,userid:value.userid})
+                     $scope.allocatedusers.map(function(value){
+                        $scope.ListusersAllocation.push({name:value.username,userid:value.userid,id:value.allocatedid})
                      });
                     
                    }
            });      
             
         }
+
+
+        $scope.RemoveUserFromList = function(allocationid,listid)
+        {
+            Entity.RemoveUserFromList().query({allocationid:allocationid}).$promise.then(function (response) {
+                $scope.getListRecordDetails(listid);
+           });      
+            
+        }
+
 
         $scope.getBirthdaysList = function(listid)
         {
