@@ -1,5 +1,5 @@
 angular.module('MyApp')
-    .controller('EntityController', ['$scope', '$rootScope', '$http', '$route', '$location', '$window', '$timeout', 'Upload', 'Entity', 'Authenticate', '$filter', function ($scope, $rootScope, $http, $route, $location, $window, $timeout, Upload, Entity, Authenticate, $filter) {
+    .controller('EntityController', ['$scope', '$rootScope', '$http', '$route', '$location', '$window', '$timeout', 'Upload', 'Entity', 'Authenticate', '$filter', '$sce', function ($scope, $rootScope, $http, $route, $location, $window, $timeout, Upload, Entity, Authenticate, $filter, $sce) {
 
 
         
@@ -18,10 +18,32 @@ angular.module('MyApp')
             selected: {}
         };
 
+        function getSession()
+        {
+            Authenticate.getSession().query().$promise.then(function (response) {
+				$scope.userDetails = response;    
+				 
+				if($location.path() != '/')
+				{
+				if( $scope.userDetails.message == "Unauthorized")
+				{
+					Swal({
+						type: 'error',
+						title: 'Session Expire',
+						text: 'Your last login session has expire.',
+					}).then(function () {
+						
+					})
+					$scope.RedirectLink('/');
+				}
+			}
+            });   
+		} getSession();
+
         function paginationSetting(totalRecord)
         {
             if(totalRecord < 50)
-            totalRecord = totalRecord + 50;
+            totalRecord = totalRecord;
             $scope.totlaCount = totalRecord;
             $scope.maxSize = 10;
             $scope.bigTotalItems = $scope.totlaCount;
@@ -177,47 +199,58 @@ angular.module('MyApp')
 
         $scope.nearestContcatFields = [{
                 field: 'listno',
-                title: "Yadi No."
+                title: "Yadi No.",
+                operator:'='
             },
             {
                 field: 'indexno',
-                title: "SR. No."
+                title: "SR. No.",
+                operator:'='
             },
             {
                 field: 'rctno',
-                title: "RCT.No."
+                title: "RCT.No.",
+                operator:'LIKE'
             },
             {
                 field: 'name',
-                title: "Name"
+                title: "Name",
+                operator:'LIKE'
             },
             {
                 field: 'gender',
-                title: "Gender"
+                title: "Gender",
+                operator:'='
             },
             {
                 field: 'email',
-                title: "Email"
+                title: "Email",
+                operator:'LIKE'
             },
             {
                 field: 'mobile1',
-                title: "Mobile No."
+                title: "Mobile No.",
+                operator:'LIKE'
             },
             {
                 field: 'mobile2',
-                title: "Alt. Mobile No."
+                title: "Alt. Mobile No.",
+                operator:'LIKE'
             },
             {
                 field: 'dob',
-                title: "Date of Birth"
+                title: "Date of Birth",
+                operator:'LIKE'
             },
             {
                 field: 'address',
-                title: "Address"
+                title: "Address",
+                operator:'LIKE'
             },
             {
                 field: 'building',
-                title: "Building Name"
+                title: "Building Name",
+                operator:'LIKE'
             },
         ]
 
@@ -419,7 +452,7 @@ angular.module('MyApp')
          $scope.getVoterContactListPagination = function(value)
         {            
 
-            if($scope.filter)         
+           /*  if($scope.filter)         
             {
                 if (($scope.filter.field == undefined || $scope.filter.field == "") && ($scope.filter.searchinput == undefined || $scope.filter.searchinput == "")) {
                     var query = {skip:value}
@@ -428,6 +461,10 @@ angular.module('MyApp')
                 {
                     var query = {skip:value, filter:$scope.filter}
                 }
+            } */
+            if($scope.filterText && $scope.filterText != '')
+            {
+                var query = {skip:value, filterText:$scope.filterText}
             }
             else
             {
@@ -919,5 +956,132 @@ angular.module('MyApp')
 
         }
 
+        $scope.FiltersObj = [{}];
+        $scope.Conditions = ['AND', 'OR'];
 
+        $scope.getStoredFiledsValues = function(fieldname)
+        {
+            if(fieldname == 'listno')
+            {
+                Entity.getStoredFiledsValues().query({}).$promise.then(function (response) {
+                        if (response.status == 0) {
+                            $scope.ListNumbers = response.listNos;
+                        }
+                });    
+            }
+        }
+
+        $scope.ApplyFilterOnRecpord = function()
+        {
+            $scope.filterText = '';
+    if($scope.FiltersObj.length > 0)            
+    {
+        var filterInputs = $scope.FiltersObj.filter(function(value){
+            return (!value.field && !value.searchinput)
+        });
+        if(filterInputs.length > 0)
+        {
+            Swal({
+                type: 'error',
+                title: 'Blank fileds',
+                text: 'Please fill the blank fields ro remove from filter if not required.',
+            }).then(function () {
+            })
+        }
+        else
+        {
+            
+
+
+            for(var i = 0 ; i < $scope.FiltersObj.length ; i++)
+            {
+                if($scope.FiltersObj[i].field == 'listno')
+                {
+                    if(!$scope.FiltersObj[i].condition && $scope.FiltersObj[i].condition == undefined)
+                    {
+                        if(i > 0)
+                            $scope.FiltersObj[i].condition = 'AND';
+                            else
+                            $scope.FiltersObj[i].condition = '';
+                    }
+
+                    var filterOperator = $scope.nearestContcatFields.filter(function(value){
+                        return value.field == $scope.FiltersObj[i].field;
+                    });
+                    if(filterOperator.length > 0)
+                    {
+                        var operator = filterOperator[0].operator;
+                    }
+                    else
+                    {
+                        var operator = '='
+                    }
+
+                     $scope.filterText =  $scope.filterText+' '+$scope.FiltersObj[i].condition+' '+$scope.FiltersObj[i].field+' '+operator+' '+$scope.FiltersObj[i].searchinput+'';
+                }
+                else
+                {
+                    if(!$scope.FiltersObj[i].condition && $scope.FiltersObj[i].condition == undefined)
+                    {
+                            if(i > 0)
+                            $scope.FiltersObj[i].condition = 'AND';
+                            else
+                            $scope.FiltersObj[i].condition = '';
+                    }
+
+                    var filterOperator = $scope.nearestContcatFields.filter(function(value){
+                        return value.field == $scope.FiltersObj[i].field;
+                    });
+                    if(filterOperator.length > 0)
+                    {
+                        var operator = filterOperator[0].operator;
+                    }
+                    else
+                    {
+                        var operator = '='
+                    }
+
+                       if(operator == '=') 
+                       {
+                        $scope.filterText =  $scope.filterText+' '+$scope.FiltersObj[i].condition+' '+$scope.FiltersObj[i].field+' '+operator+' "'+$scope.FiltersObj[i].searchinput+'"';
+                       }
+                       else
+                     $scope.filterText =  $scope.filterText+' '+$scope.FiltersObj[i].condition+' '+$scope.FiltersObj[i].field+' LIKE "%'+$scope.FiltersObj[i].searchinput+'%"';
+                }
+            }       
+            Entity.FilterNearestResult().save({filtertext: $scope.filterText}).$promise.then(function (response) {
+                if (!response.status)
+                    $scope.voterContactsList = response.voterContactsList;
+                    if($scope.voterContactsList.length > 0)
+                    paginationSetting($scope.voterContactsList[0].totalcontacts);
+                    else
+                    {
+                        paginationSetting(0);
+                    }
+            });
+            
+        }
+    }
+        }
+
+        $scope.checkFilterCount = function()
+        {
+            if($scope.FiltersObj.length > 0)
+            {
+                if(!$scope.FiltersObj[0].field && !$scope.FiltersObj[0].searchinput)
+                {
+                    return false;
+                }
+                else
+                return true;
+            }
+        }
+
+        $scope.spliceFilter =function(index)
+        {
+            $scope.FiltersObj.splice(index, 1);
+            $scope.filterText = '';
+        }
+
+        $('[data-toggle="popover"]').popover();   
     }]);

@@ -154,5 +154,11 @@ angular.module('MyApp')
             return $resource('/api/getBirthdaysList/',
                 {}, { 'query': { method: 'GET',isArray:false } });
         },
+
+        getStoredFiledsValues: function()
+        {
+            return $resource('/api/getStoredFiledsValues/',
+                {}, { 'query': { method: 'GET',isArray:false } });
+        },
     }
   }]);
