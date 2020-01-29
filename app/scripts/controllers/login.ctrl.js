@@ -303,7 +303,7 @@ angular.module('MyApp')
 		$scope.ToggleNavbar = function () {
 			$scope.openNav = true;
 			var className = $('#sidenav').attr('class');
-			if (className == 'main_sidebar animated slideInLeft') {
+			if (className == 'main_sidebar animated bg-amin slideInLeft') {
 				$("#sidenav").removeClass("slideInLeft").addClass("slideOutLeft");
 				$(".container-fluid *").attr("disabled", false);
 			} else {
