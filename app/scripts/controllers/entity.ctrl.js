@@ -1143,5 +1143,18 @@ angular.module('MyApp')
             });  
         }
 
+        $scope.CheckRowExist = function(data)
+        {
+            var existContactinList =  $scope.selectedContacts.filter(function(value){
+                return value.id == data.id;
+            });
+            if(existContactinList.length > 0)
+            {
+                return true;
+            }
+            return false;
+
+        }
+
         $('[data-toggle="popover"]').popover();   
     }]);
