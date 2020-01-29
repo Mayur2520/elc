@@ -1083,5 +1083,65 @@ angular.module('MyApp')
             $scope.filterText = '';
         }
 
+        $scope.selectedContacts = [];
+
+        $scope.selectDeselectItem = function(data)
+        {
+            if($scope.selectedContacts.length <= 0)
+            {
+                $scope.selectedContacts.push(data)
+            }
+            else
+            {
+                var recordExist = $scope.selectedContacts.filter(function(value){
+                    return value.id == data.id
+                });
+
+                if(recordExist.length > 0)
+                {
+                    $scope.selectedContacts.splice( $scope.selectedContacts.indexOf(recordExist[0]), 1);
+                }
+                else
+                {
+                    $scope.selectedContacts.push(data)
+                }
+            }
+        }
+
+        $scope.DeleteSelectedContacts = function()
+        {
+            Swal({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then(function (result) {
+                if (result.value) {
+
+                        var ss = '';
+                    $scope.selectedContacts.map(function(value){
+                        ss = ss+value.id+',';
+                    });
+                    ss = ss.substr(0, ss.length - 1);
+
+                    Entity.DeleteSelectedContacts().save({
+                        ids: ss
+                    }).$promise.then(function (response) {
+                        Swal({
+                            type: response.type,
+                            title: response.title,
+                            text: response.message,
+                        }).then(function () {
+                            $scope.selectedContacts = [];
+                            $scope.getContactList();
+                        })
+                    });
+                }
+            });  
+        }
+
         $('[data-toggle="popover"]').popover();   
     }]);

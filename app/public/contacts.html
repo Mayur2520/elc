@@ -185,6 +185,7 @@
                         <button class="btn btn-info btn-sm" ng-click="AddNewContact()">Add Contact</button>
                         <button class="btn btn-info btn-sm" data-toggle="modal"
                             data-target="#myModalImportContacts">Import Contacts</button>
+                        <button class="btn btn-info btn-sm" ng-if="selectedContacts.length > 0" ng-click="DeleteSelectedContacts()">Delete Contacts</button>
                     </div>
                     <div class="col-md-6 col-lg-4 col-sm-6 col-12 ml-auto mt-1">
                         <div class="row">
@@ -203,12 +204,7 @@
                                     </div>
                                   </div>
                         </div>
-                       
 
-
-                         
-                            
-                            
                         </div>
                     </div>
                 </div>
@@ -238,6 +234,7 @@
                 <table class="table table-bordered table-striped table-condensed">
                     <thead class="text-center">
                         <th>#</th>
+                        <th></th>
                         <th>Name</th>
                         <th style="width: 35px;">Gender</th>
                         <th style="width: 60px;">Mobile</th>
@@ -255,6 +252,11 @@
 
         <script type="text/ng-template" id="display">
             <td>{{$index +1}}</td>
+            <td><div class="form-check">
+                <label class="form-check-label">
+                  <input type="checkbox" ng-model="data.bool" ng-click="selectDeselectItem(data)" class="form-check-input">
+                </label>
+              </div></td>
         <td>{{data.name}}</td>
         <td>{{data.gender}}</td>
         <td>{{data.mobile1}}</td>
@@ -277,6 +279,11 @@
     </script>
         <script type="text/ng-template" id="edit">
             <td>{{$index +1}}</td>
+            <td><div class="form-check">
+                <label class="form-check-label">
+                  <input type="checkbox" ng-model="data.bool" ng-click="selectDeselectItem(data)" class="form-check-input">
+                </label>
+              </div></td>
        <td><input class="form-control btn-sm" placeholder="Name" ng-model="data.name" autocomplete="off" autofocus/></td>
        <td><select class="form-control btn-sm" ng-model="data.gender" ng-options="obj for obj in ['Male','Female','Other']">
         <option value="" selected disabled>--Select--</option>

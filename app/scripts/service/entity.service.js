@@ -160,5 +160,11 @@ angular.module('MyApp')
             return $resource('/api/getStoredFiledsValues/',
                 {}, { 'query': { method: 'GET',isArray:false } });
         },
+
+        DeleteSelectedContacts: function()
+        {
+            return $resource('/api/DeleteSelectedContacts/',
+                {}, { 'save': { method: 'POST',isArray:false } });
+        },
     }
   }]);
