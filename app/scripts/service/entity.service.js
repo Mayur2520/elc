@@ -166,5 +166,24 @@ angular.module('MyApp')
             return $resource('/api/DeleteSelectedContacts/',
                 {}, { 'save': { method: 'POST',isArray:false } });
         },
+
+        listContacts: function()
+        {
+            return $resource('/api/listContacts/',
+                {}, { 'save': { method: 'POST',isArray:false } });
+        },
+
+        saveContacts: function()
+        {
+            return $resource('/api/saveContacts/',
+                {}, { 'save': { method: 'POST',isArray:false } });
+        },
+
+        importContacts: function()
+        {
+            return $resource('/api/importContacts/',
+                {}, { 'save': { method: 'POST',isArray:false } });
+        },
+
     }
   }]);

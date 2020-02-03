@@ -40,6 +40,7 @@ angular.module('MyApp')
             });   
 		} getSession();
 
+        $scope.bigCurrentPage = 1;
         function paginationSetting(totalRecord)
         {
             if(totalRecord < 50)
@@ -47,7 +48,7 @@ angular.module('MyApp')
             $scope.totlaCount = totalRecord;
             $scope.maxSize = 10;
             $scope.bigTotalItems = $scope.totlaCount;
-            $scope.bigCurrentPage = 1;
+           
         }
 
 
@@ -175,27 +176,31 @@ angular.module('MyApp')
         }
 
         $scope.CustomersFields = [{
-                field: 'name',
-                title: "Name"
-            },
-            {
-                field: 'gender',
-                title: "Gender"
-            },
-            {
-                field: 'mobile1',
-                title: "Mobile No."
-            },
-            {
-                field: 'mobile2',
-                title: "Alt. Mobile No."
-            },
-            {
-                field: 'email',
-                title: "Email"
-            },
-        ]
-
+            field: 'name',
+            title: "Name",
+             operator:'LIKE'
+        },
+        {
+            field: 'gender',
+            title: "Gender",
+            operator:'='
+        },
+        {
+            field: 'mobile1',
+            title: "Mobile No.",
+            operator:'='
+        },
+        {
+            field: 'mobile2',
+            title: "Alt. Mobile No.",
+            operator:'='
+        },
+        {
+            field: 'email',
+            title: "Email",
+            operator:'LIKE'
+        },
+    ]
 
         $scope.nearestContcatFields = [{
                 field: 'listno',
@@ -1157,4 +1162,153 @@ angular.module('MyApp')
         }
 
         $('[data-toggle="popover"]').popover();   
+
+
+        $scope.listContacts = function (status,skip) {
+
+            if(skip > 0)
+            {
+                var skiprcd = skip - 1;
+            }
+            else
+            {
+                var skiprcd = 0
+            }
+            var query = {skip:skiprcd};
+
+            if ($scope.filter && ($scope.filter.field != undefined || $scope.filter.field != "") && ($scope.filter.searchinput != undefined || $scope.filter.searchinput != ""))
+            {
+
+                 var filterObj = $filter('filter')($scope.CustomersFields,  $scope.filter.field)
+
+                /* var filterObj = $scope.CustomersFields.filter(function(val){
+                        return val.field == $scope.filter.field;
+                }); */
+                if(filterObj.length > 0)
+                {
+                    $scope.filter.operator = filterObj[0].operator;
+                }
+                query['filter'] = $scope.filter;
+            }
+            Entity.listContacts().save(query).$promise.then(function (response) {
+                if (!response.status)
+                    $scope.contactsList = response.contactsList;
+                if (status) {
+                    $scope.editContact($scope.contactsList[0])
+                }
+                if($scope.contactsList.length > 0)
+                    paginationSetting(response.totalRecord);
+            });
+        }
+
+        $scope.newContactAdd = function(xdata)
+        {
+            
+            if(xdata)
+            {
+             var contactsDetails = xdata;
+            }
+            else
+            {
+                var contactsDetails = {};
+            }
+            
+            Entity.saveContacts().save(contactsDetails).$promise.then(function (response) {
+                Swal({
+                    type: response.type,
+                    title: response.title,
+                    text: response.message,
+                }).then(function () {
+                    if (response.status == 0) {
+                    }
+                })
+                $scope.reset();
+                if(contactsDetails == {})
+                $scope.listContacts('true');
+            });
+            
+        }
+
+        $scope.ImportContactsDetails = function()
+        {
+            $scope.startImport  = true;
+
+            var file = document.getElementById("bulkDirectFile").files[0];
+            if (file) {
+                
+                Papa.parse(file, {
+                    download: true,
+                    header: true,
+                    skipEmptyLines: true,
+                    error: function(err, file, inputElem, reason) { },
+                    complete: function(results) {
+                       
+                        Entity.importContacts().save(results.data).$promise.then(function (response) {
+                            Swal({
+                                type: response.type,
+                                title: response.title,
+                                text: response.message,
+                            }).then(function () {
+                                if (response.status == 0) {
+                                    $('#myModalImportContacts').modal('hide');
+                                    $scope.startImport  = false;
+                                    $scope.listContacts();
+                                }
+                            })
+                        });    
+
+                         
+                    }
+                  });   
+            }
+        }
+
+        $scope.importDataFromCsv = function()
+        {
+            $scope.progressPercentage = 0;
+            if ($scope.import_data.file.$valid && $scope.dataFile) {
+				var passeddata = {
+				  file: $scope.dataFile,
+				}
+			  } else {
+				Swal({
+                    type: 'error',
+                    title: 'Error',
+                    text: 'Invalid file format or file not selected.',
+                  }).then(function()  {
+                    location.reload();
+                  })
+			  }
+			  Upload.upload({
+				url: '/api/importDataFromCsv',
+				data: passeddata
+			  }).then(function (resp) {
+                $scope.progressPercentage  = 100;
+				Swal({
+				  type: resp.data.type,
+				  title: resp.data.title,
+				  text: resp.data.message,
+				}).then(function()  {
+				  location.reload();
+				})
+			  }, function (resp) {
+                $scope.progressPercentage  = 100;
+				Swal({
+				  type: resp.data.type,
+				  title: resp.data.title,
+				  text: resp.data.message,
+				}).then(function()  {
+				  location.reload();
+				})
+			  }, function (evt) {
+
+                
+                $scope.progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                ;
+				
+				// console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+			  });
+        }
+
+
     }]);
